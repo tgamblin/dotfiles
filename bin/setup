@@ -2,6 +2,7 @@
 function help() {
 echo "======================================================================="
 echo ".dotfiles/bin/setup"
+echo "   by Todd Gamblin, tgamblin@llnl.gov"
 echo "======================================================================="
 echo "This script links and unlinks dotfiles into your home directory."
 echo
@@ -57,7 +58,7 @@ function error() {
 link_dest=$HOME
 
 # Location of the repository the link script lives in
-repository=$(dirname $(dirname $(realpath "$0")))
+repository=$(dirname $(dirname $(readlink -f "$0")))
 
 # The directory in the repository where files to be linked
 # into the home directory live.

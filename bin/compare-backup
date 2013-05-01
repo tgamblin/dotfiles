@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# This script will report which files differ between those symlinked in
+# by the dotfiles tools and the ones that were move aside by the install.
+#
+# Todd Gamblin, tgamblin@llnl.gov
+#
+backup_dir=.dotfiles-backup
+diff=diff
+
+# Check that there is a backup directory
+if [ ! -d "$backup_dir" ]; then
+    echo "Error: $backup_dir does not exist."
+    exit 1
+fi
+
+# Compare each file in the backup directory with the file in the home
+# directory, skipping directories.  Report whether files differ.
+for file in $(\ls -A .dotfiles-backup); do
+    if [ -f $file ]; then
+        if ! diff -q "$file" "$backup_dir/$file" > /dev/null; then
+            echo $file differs
+        fi
+    else
+        echo skipping directory $file
+    fi
+done
