@@ -17,6 +17,8 @@
 ; strip trailing whitespace
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+; No prompt on edit version-controlled files through symlinks
+(setq vc-follow-symlinks t)
 
 ;; ==== Color Setup ==========================================================
 (set-background-color "black")
