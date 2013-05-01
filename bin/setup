@@ -54,8 +54,7 @@ function error() {
 }
 
 # Directory to link files into
-#link_dest=$HOME
-link_dest="$HOME/foo"
+link_dest=$HOME
 
 # Location of the repository the link script lives in
 repository=$(dirname $(dirname $(realpath "$0")))
@@ -87,7 +86,7 @@ case $cmd in
         echo "  from: $repo_home"
         echo "  into: $link_dest"
 
-        for file in $(\ls $repo_home); do
+        for file in $(\ls -A $repo_home); do
             dest="$link_dest/$file"
             src="$rel_repo/$file"
 
