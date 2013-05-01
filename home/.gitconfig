@@ -1,0 +1,30 @@
+[user]
+	name = Todd Gamblin
+	email = tgamblin@llnl.gov
+[merge]
+	tool = opendiff
+[diff]
+[color]
+	ui = auto
+[core]
+	excludesfile = /Users/gamblin2/.gitignore_global
+[difftool]
+	prompt = false
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
+    st = status
+    ci = commit
+[push]
+	default = current
+[credential]
+	helper = cache --timeout=43200
+[http]
+	postBuffer = 524288000
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path =
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true

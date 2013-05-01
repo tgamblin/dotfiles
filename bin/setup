@@ -1,0 +1,125 @@
+#!/bin/bash
+function help() {
+echo "======================================================================="
+echo ".dotfiles/bin/setup"
+echo "======================================================================="
+echo "This script links and unlinks dotfiles into your home directory."
+echo
+echo "The .dotfiles repository is laid out like this:"
+echo
+echo "  .dotfiles/"
+echo "      bin/"
+echo "      help"
+echo "      home/"
+echo "          ... actual dotfiles ..."
+echo "      link"
+echo "      unlink"
+echo
+echo "help, link, and unlink are symbolic links to the setup script, which"
+echo "does three things, depending on which symlink you call it with."
+echo "They are as follows:"
+echo
+echo "link"
+echo "    If you call this command as 'link', it will create symlnks in"
+echo "    your home directory to all of the files in .dotfiles/home."
+echo "    This can be used to bootstrap a home directory on a new machine,"
+echo "    e.g.:"
+echo
+echo "        git clone git@github.com:tgamblin/dotfiles.git .dotfiles"
+echo "        .dotfiles/link"
+echo
+echo "    If there are files in the way, the script will create a directory"
+echo "    called ~/.dotfiles-backup, where it moves the original versions"
+echo "    of your files."
+echo
+echo "    'link' is idempotent if called twice in a row."
+echo
+echo "unlink"
+echo "    Unlink removes symbolic links created by this script and restores"
+echo "    any files in ~/.dotfiles-backup to their original locations."
+echo "    If you call it without having created symlinks into the .dotfiles"
+echo "    repo, it will do nothing (so as not to damage your home directory)."
+echo
+echo "help"
+echo "    Calling this script as '.dotfiles/help' will print this message."
+echo
+}
+
+#
+# Prints an error message and dies.
+#
+function error() {
+    echo "ERROR: $1"
+    exit 1
+}
+
+# Directory to link files into
+#link_dest=$HOME
+link_dest="$HOME/foo"
+
+# Location of the repository the link script lives in
+repository=$(dirname $(dirname $(realpath "$0")))
+
+# The directory in the repository where files to be linked
+# into the home directory live.
+repo_home="$repository/home"
+
+# Default name of directory to store backups in
+backup_dir=$link_dest/.dotfiles-backup
+
+# Ensure that the repository home exists.
+[[ -d "$repo_home" ]] || error "Couldn't find $repo_home!"
+
+# Check whether we can write to the link destination.
+[[ -w "$link_dest" ]] || error "$link_dest is not writable!"
+
+# If the repo is inside link destination, use a relative path.
+rel_repo=\
+$(echo $repo_home | perl -pe "\$s=quotemeta(\"${link_dest}/\"); s/\$s//;")
+
+# Command is the symlink through which we ran this script.
+cmd=$(basename $0)
+[[ -n "$cmd" ]] || cmd="help"
+
+case $cmd in
+    link | unlink)
+        echo "${cmd}ing dotfiles"
+        echo "  from: $repo_home"
+        echo "  into: $link_dest"
+
+        for file in $(\ls $repo_home); do
+            dest="$link_dest/$file"
+            src="$rel_repo/$file"
+
+            if [ "$cmd" = "link" ]; then
+                # If the file already exists, move it.
+                if [ -e "$dest" -a \( "$(readlink $dest)" != "$src" \) ]; then
+                    [[ -d "$backup_dir" ]] || mkdir "$backup_dir"
+                    mv "$dest" "$backup_dir/$file"
+                fi
+
+                # Link the file into the destination location, if the link
+                # isn't already there.
+                if [ ! -e "$dest" ]; then
+                    ln -s "$src" "$dest"
+                fi
+
+            else
+                # Remove our symlink if it exists, then restore backup
+                if [ -L "$dest" -a \( "$(readlink $dest)" = "$src" \) ]; then
+                    if [ -e "$backup_dir/$file" ]; then
+                        # Restrore the backup if it exists
+                        rm "$dest"
+                        mv "$backup_dir/$file" "$dest"
+                    else
+                        # Just remove the link if not
+                        rm "$dest"
+                    fi
+                fi
+            fi
+        done
+        ;;
+    *)
+        help
+        ;;
+esac

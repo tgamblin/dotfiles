@@ -1,0 +1,59 @@
+# -*- python -*-
+# Add auto-completion and a stored history file of commands to your Python
+# interactive interpreter. Requires Python 2.0+, readline. Autocomplete is
+# bound to the Esc key by default (you can change it - see readline docs).
+#
+# Store the file in ~/.pystartup, and set an environment variable to point
+# to it:  "export PYTHONSTARTUP=/home/user/.pystartup" in bash.
+#
+# Note that PYTHONSTARTUP does *not* expand "~", so you have to put in the
+# full path to your home directory.
+
+import atexit, os, sys, readline, rlcompleter, re
+
+historyPath = os.path.expanduser("~/.pyhistory")
+
+def save_history(historyPath=historyPath):
+    import readline
+    readline.write_history_file(historyPath)
+
+if os.path.exists(historyPath):
+    readline.read_history_file(historyPath)
+
+# Completer that does not complete if there's only a tab on the line.
+class complete_wrapper:
+    def __init__(self, completer):
+        self._wrappee = completer.im_self
+        self._end_colon = re.compile(":\s*$")
+        self._start_space = re.compile("(\s*).*:\s*$")
+
+    def complete(self,text,state):
+        if text:
+            return self._wrappee.complete(text,state)
+        else:
+            if state == 0:       # return three spaces b/c 4th is automatic.
+                return "   "
+            else:                # return None on state 1 b/c just one completion
+                return None
+
+cw = complete_wrapper(readline.get_completer())
+readline.set_completer(cw.complete)
+
+if "libedit" in readline.__doc__:
+    # Apple's default python doesn't build with real readline, so use BSD's libedit instead.
+    readline.parse_and_bind("bind ^I rl_complete")
+else:
+    # binding for real GNU readline.
+    readline.parse_and_bind("tab: complete")
+
+# Numpy settings are in a separate file.
+python_d = os.path.expanduser("~/.python.d")
+if os.path.exists(python_d):
+    def pyfile(file):
+        return file.endswith(".py") and not file.startswith("~")
+    for file in filter(pyfile, os.listdir(python_d)):
+        execfile(os.path.join(python_d, file))
+
+atexit.register(save_history)
+del os, atexit, readline, rlcompleter, re, save_history, historyPath, complete_wrapper, cw, python_d
+

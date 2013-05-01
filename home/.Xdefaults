@@ -1,0 +1,4 @@
+xterm*background:               black
+xterm*Foreground:               white
+xterm*Font:                     fixed
+XTerm*openIm: false

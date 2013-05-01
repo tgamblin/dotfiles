@@ -1,0 +1,81 @@
+#!/bin/tcsh
+
+set cyan          = "%{\033[0;36m%}"
+set gray          = "%{\033[0;37m%}"
+set ltblue        = "%{\033[1;34m%}"
+set none          = "%{\033[0m%}"
+set set_title_cmd = "%{\033]0;%M:%~\007%}"
+set prompt="${set_title_cmd}${gray}(${ltblue}%m${gray}):${cyan}%c${gray}%#${none} "
+
+set autolist=ambiguous:
+bindkey -e
+bindkey "^R" i-search-back
+
+alias screen 'screen -R -D'
+
+
+set LS = ls
+set LS_OPTIONS = "-F"
+set L_OPTIONS  = "-l"
+set LL_OPTIONS = "$L_OPTIONS"
+
+# os specific TERM & ls setup stuff
+set OS = `uname -s`
+
+if ($OS == "Linux") then
+    setenv TERM 'xterm-color'
+    setenv PATH "${HOME}/bin/linux:${PATH}"
+    set LS_OPTIONS = "--color=auto -B $LS_OPTIONS"
+    set L_OPTIONS = "-h $L_OPTIONS"
+
+else if ($OS == "Darwin") then
+    setenv TERM 'xterm-color'
+    set LS_OPTIONS = "-B $LS_OPTIONS"
+    set L_OPTIONS = "-h $L_OPTIONS"
+    set GLS = /opt/local/bin/gls
+    if (-e "$GLS") then
+        set LS = $GLS
+        set LS_OPTIONS = "--color=auto $LS_OPTIONS"
+    endif
+
+else if ($OS == "AIX") then
+    setenv TERM 'aixterm'
+
+else if ($OS == "SunOS") then
+    setenv TERM 'vt100'
+else
+    setenv TERM 'vt100'
+endif
+
+alias ls '$LS $LS_OPTIONS';
+alias l  '$LS -l $L_OPTIONS $LS_OPTIONS';
+alias ll '$LS -l $LL_OPTIONS $LS_OPTIONS';
+ 
+alias rb   "rm -f *~ .*~ \#* .\#*"
+alias f    'finger'
+alias more 'less'
+
+#setenv EDITOR "emacs -nw"
+setenv EDITOR "mate -w"
+setenv MANPATH ":"
+
+# Init other config files as necessary.  File should be put in ~/.tcsh.d, 
+# and can be disabled by putting a ~ anywhere in the name.
+# Thanks to http://scottcollins.blogdns.net/journal/
+set script_dir="~/.tcsh.d"
+if (-d $script_dir) then
+    foreach config_file (`find $script_dir ! -path '*~*' -type f`)
+        source $config_file
+    end
+endif
+
+set path = ( "." "$HOME/bin" "$PATH" "/bin" "/usr/sbin" "/sbin" "/usr/bin" "/usr/local/bin" "/opt/bin" )
+
+
+# Removes duplicate elements from path environment variables without affecting precedence order
+#function clean_path {
+#    for arg in $@; do
+#        export $arg=`perl -e "print join(q{:}, grep(!\\$saw{\\$_}++,split(/:/,\\$ENV{$arg})));"`
+#    done
+#}
+#clean_path PATH DYLD_LIBRARY_PATH
