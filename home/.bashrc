@@ -124,8 +124,9 @@ alias screen='screen -R -D'
 
 # Init other config files as necessary.  File should be put in ~/.bash.d,
 # and can be disabled by putting a ~ anywhere in the name.
-if [ -d ~/.bash.d ]; then
-  for config_file in $(find ~/.bash.d ! -path '*~*' -type f) ; do
+bashd=$(readlink -f ~/.bash.d)
+if [ -d $bashd ]; then
+  for config_file in $(find $bashd ! -path '*~*' -type f) ; do
     . $config_file
   done
 fi
