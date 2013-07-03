@@ -46,6 +46,14 @@ else:
     # binding for real GNU readline.
     readline.parse_and_bind("tab: complete")
 
+def mod_available(module):
+    try:
+        __import__(module)
+    except ImportError:
+        return False
+    else:
+        return True
+
 # Numpy settings are in a separate file.
 python_d = os.path.expanduser("~/.python.d")
 if os.path.exists(python_d):
@@ -55,5 +63,6 @@ if os.path.exists(python_d):
         execfile(os.path.join(python_d, file))
 
 atexit.register(save_history)
-del os, atexit, readline, rlcompleter, re, save_history, historyPath, complete_wrapper, cw, python_d
-
+del os, atexit, readline, rlcompleter, re, \
+    save_history, historyPath, complete_wrapper, \
+    cw, python_d, mod_available
