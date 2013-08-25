@@ -97,7 +97,7 @@ fi
 
 # Figure out which ls we're using and set some options.
 if ls --color -d . >/dev/null 2>&1; then
-    export LS_OPTIONS="--color=auto -F -B -I '*pyc'"
+    export LS_OPTIONS="--color=auto -F -B"
 elif ls -G -d . >/dev/null 2>&1; then
     export LS_OPTIONS="-G -F"
 fi
