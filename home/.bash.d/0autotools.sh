@@ -1,1 +1,1 @@
-pathadd $HOME/opt/autotools/bin
+pathadd $HOME/opt/autotools/$SYS_TYPE/bin

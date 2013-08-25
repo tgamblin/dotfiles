@@ -118,7 +118,7 @@
 
 (require 'c-header-switch)
 
-;; c hook -- sets tabs to 4 wide
+;; c hook -- sets tabs
 (defun my-c-mode-common-hook ()
   (setq-default standard-indent 3)
   (setq tab-width 3)
