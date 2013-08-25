@@ -55,7 +55,7 @@ if $interactive; then
     # non-printing characters.
     red="\001\[\033[0;31m\]\002"
     cyan="\001\[\033[0;36m\]\002"
-    gray="\001\[\033[0;37m\]\002"
+    gray="\001\[\033[1;90m\]\002"
     ltgreen="\001\[\033[1;32m\]\002"
     ltblue="\001\[\033[1;34m\]\002"
     reset="\001\[\033[0m\]\002"
@@ -71,7 +71,7 @@ if $interactive; then
         host_color="$green"
     fi
 
-    export PS1="(${host_color}\h${reset}):${cyan}\W${reset}\$ "
+    export PS1="${gray}(${host_color}\h${gray}):${cyan}\W${gray}\$${reset} "
     export PROMPT_COMMAND='echo -ne "\033]0;${USER} @ ${HOSTNAME} : ${PWD}\007"'
 fi
 
