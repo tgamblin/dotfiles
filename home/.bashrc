@@ -55,13 +55,17 @@ if $interactive; then
     gray="\[\033[0;37m\]"
     ltblue="\[\033[1;34m\]"
     green="\[\033[1;32m\]"
+    red="\[\033[0;31m\]"
     reset="\[\033[0m\]"
 
     # Use a blue prompt by default
     host_color="$ltblue"
 
-    # If we're in a SLURM salloc shell use a green prompt so we know it's parallel.
-    if [ ! -z "$SLURM_JOBID" ]; then
+    if [ "$(whoami)" = "root" ]; then
+        # If we're in a root shell, make the prompt red
+        host_color="$red"
+    elif [ ! -z "$SLURM_JOBID" ]; then
+        # If we're in a SLURM salloc shell use a green prompt so we know it's parallel.
         host_color="$green"
     fi
 
