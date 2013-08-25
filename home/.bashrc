@@ -50,6 +50,9 @@ if $interactive; then
     ulimit -s $(ulimit -Hs)
     ulimit -c unlimited
 
+    # Make bash set LINES and COLUMNS after each command.
+    shopt -s checkwinsize
+
     # color prompt with hostname and current directory.  Here are some color codes.
     # These need to be wrapped in \001 and \002 so that readline knows to ignore
     # non-printing characters.

@@ -128,7 +128,6 @@
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
 ;; ==== Regex builder setup ===================================================
-
 (defun reb-query-replace-this-regxp (replace)
   "Uses the regexp built with re-builder to query the target buffer.
    This function must be run from within the re-builder buffer, not the target
@@ -149,3 +148,19 @@
   (define-key reb-mode-map "\C-c\M-%" 'reb-query-replace-this-regxp)
   (setq reb-re-syntax 'string))
 (add-hook 'reb-mode-hook 'my-reb-hook)
+
+
+;; ==== Set terminal title ====================================================
+(require 'xterm-frobs)
+(defun my-set-xterm-title ()
+  (xterm-set-window-title
+   (concat (getenv "HOSTNAME") "- emacs - " (buffer-name))))
+
+(let ((term (getenv "TERM")))
+  (when (and (not window-system)
+             (or (string= term "xterm")
+                 (string= term "xterm-color")
+                 (string= term "rxvt")))
+    (require 'xterm-frobs)
+    (add-hook 'window-configuration-change-hook 'my-set-xterm-title)
+    (add-hook 'emacs-startup-hook 'my-set-xterm-title)))
