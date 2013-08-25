@@ -50,13 +50,15 @@ if $interactive; then
     ulimit -s $(ulimit -Hs)
     ulimit -c unlimited
 
-    # color prompt with hostname and current directory.  Here are some color codes:
-    cyan="\[\033[0;36m\]"
-    gray="\[\033[0;37m\]"
-    ltblue="\[\033[1;34m\]"
-    green="\[\033[1;32m\]"
-    red="\[\033[0;31m\]"
-    reset="\[\033[0m\]"
+    # color prompt with hostname and current directory.  Here are some color codes.
+    # These need to be wrapped in \001 and \002 so that readline knows to ignore
+    # non-printing characters.
+    red="\001\[\033[0;31m\]\002"
+    cyan="\001\[\033[0;36m\]\002"
+    gray="\001\[\033[0;37m\]\002"
+    ltgreen="\001\[\033[1;32m\]\002"
+    ltblue="\001\[\033[1;34m\]\002"
+    reset="\001\[\033[0m\]\002"
 
     # Use a blue prompt by default
     host_color="$ltblue"
@@ -69,7 +71,7 @@ if $interactive; then
         host_color="$green"
     fi
 
-    export PS1="${gray}(${host_color}\h${gray}):${cyan}\W${gray}\$${reset} "
+    export PS1="(${host_color}\h${reset}):${cyan}\W${reset}\$ "
     export PROMPT_COMMAND='echo -ne "\033]0;${USER} @ ${HOSTNAME} : ${PWD}\007"'
 fi
 
