@@ -94,7 +94,7 @@ if $interactive; then
     # Use a blue prompt by default
     host_color="$ltblue"
 
-    if [ "$(whoami)" = "root" ]; then
+    if [ "$USER" = "root" ]; then
         # If we're in a root shell, make the prompt red
         host_color="$red"
     elif [ ! -z "$SLURM_JOBID" ]; then
@@ -112,7 +112,7 @@ shopt -s histappend              # append instead of overwrite (good for multipl
 export HISTCONTROL=ignoreboth    # don't save duplicate entries
 export HISTSIZE=10000
 
-
+# Default editor (see below for TextMate extras)
 export EDITOR="emacs -nw"
 
 # Macports setup is only done on Darwin.
@@ -181,7 +181,9 @@ pathadd .
 
 # Use TextMate if we're in a GUI session and it exists, otherwise emacs.
 # Do editor setup after path setup as it depends on the PATH
-mate=`which mate 2>/dev/null`
-if [ "$Apple_PubSub_Socket_Render" != "" -a ! -z "$mate" ]; then
-    export EDITOR="mate -w"
+if [ "$Apple_PubSub_Socket_Render" != "" ]; then
+    mate=$(which mate 2>/dev/null)
+    if [ ! -z "$mate" ]; then
+        export EDITOR="mate -w"
+    fi
 fi
