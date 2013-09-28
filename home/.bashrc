@@ -1,17 +1,35 @@
 # Prepends directories to path, if they exist.
-function pathadd {
-    if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
-        export PATH="$1:$PATH"
+#      pathadd /path/to/dir            # add to PATH
+# or   pathadd OTHERPATH /path/to/dir  # add to OTHERPATH
+#
+pathadd() {
+    # If no variable name is supplied, just append to PATH
+    # otherwise append to that variable.
+    varname=PATH
+    path="$1"
+    if [ -n "$2" ]; then
+        varname="$1"
+        path="$2"
+    fi
+
+    # Do the actual appending here.
+    eval "oldvalue=\"\$$varname\""
+    if [ -d "$path" ] && [[ ":$oldvalue:" != *":$path:"* ]]; then
+        if [ -n "$oldvalue" ]; then
+            eval "export $varname=\"$path:$oldvalue\""
+        else
+            export $varname="$path"
+        fi
     fi
 }
 
-# Removes duplicate elements from path environment variables without affecting precedence order
-function clean_path {
-    export $1=`perl -e "print join(q{:}, grep(!\\$saw{\\$_}++,split(/:/,\\$ENV{$1})));"`
+# Remove duplicate entries from PATH
+clean_path() {
+    export PATH=$(echo "$PATH" | awk -F: '{for (i=1;i<=NF;i++) { if ( !x[$i]++ ) printf("%s:",$i); }}')
 }
 
 # Source a file if it exists
-function source_if_exists {
+source_if_exists() {
     if [ -f "$1" ]; then
         . "$1"
     fi
@@ -20,6 +38,9 @@ function source_if_exists {
 source_if_exists /etc/lc.bashrc
 source_if_exists /etc/bashrc
 source_if_exists /usr/local/tools/dotkit/init.sh
+
+# Determine the OS
+OS=$(uname -s)
 
 # Test whether this is an interactive shell.
 case $- in
@@ -30,13 +51,13 @@ esac
 # This is setup specifically for interactive shells
 if $interactive; then
     # Pick a good terminal for the machine we're on
-    OS=$(uname -s)
     case $OS in
-        'Linux')   export TERM='xterm-color' ;;
-        'Darwin' ) export TERM='xterm-color' ;;
-        'AIX')     export TERM='aixterm' ;;
-        * )        export TERM='vt100' ;;
+        'Linux')   TERM='xterm-color' ;;
+        'Darwin' ) TERM='xterm-color' ;;
+        'AIX')     TERM='aixterm' ;;
+        * )        TERM='vt100' ;;
     esac
+    export TERM
 
     # X settings
     if [ -f ~/.Xdefaults ]; then
@@ -62,6 +83,13 @@ if $interactive; then
     ltgreen="\001\[\033[1;32m\]\002"
     ltblue="\001\[\033[1;34m\]\002"
     reset="\001\[\033[0m\]\002"
+
+    red="\[\033[0;31m\]"
+    cyan="\[\033[0;36m\]"
+    gray="\[\033[1;90m\]"
+    ltgreen="\[\033[1;32m\]"
+    ltblue="\[\033[1;34m\]"
+    reset="\[\033[0m\]"
 
     # Use a blue prompt by default
     host_color="$ltblue"
@@ -123,6 +151,8 @@ export GREP_OPTIONS=--color=auto
 # disable stupid X11 programs that ask for your ssh password
 export SSH_ASKPASS=
 
+# Python startup file
+export PYTHONSTARTUP=~/.python
 
 # Other convenient aliases
 alias rb="rm -f *~ .*~ \#* .\#*"
@@ -133,20 +163,21 @@ alias screen='screen -R -D'
 
 # Init other config files as necessary.  File should be put in ~/.bash.d,
 # and can be disabled by putting a ~ anywhere in the name.
-bashd=$(readlink -f ~/.bash.d)
-if [ -d $bashd ]; then
-  for config_file in $(find $bashd ! -path '*~*' -type f) ; do
-    . $config_file
-  done
+extra_scripts=$HOME/.bash.d/*
+if [ "$extra_scripts" != "$HOME/.bash.d/\*" ]; then
+    for script in $extra_scripts; do
+        if [[ "$script" != *"~"*  ]]; then
+            . $script
+        fi
+    done
 fi
 
 pathadd /usr/sbin
 pathadd $HOME/bin
 pathadd .
 
-clean_path PATH
-clean_path DYLD_LIBRARY_PATH
-
+# Unneeded if everyone uses pathadd
+#clean_path
 
 # Use TextMate if we're in a GUI session and it exists, otherwise emacs.
 # Do editor setup after path setup as it depends on the PATH

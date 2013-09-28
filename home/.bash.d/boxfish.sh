@@ -1,3 +1,0 @@
-export BOXFISH_HOME=$HOME/src/boxfish
-pathadd $BOXFISH_HOME/bin
-export PYTHONPATH=$BOXFISH_HOME:$PYTHONPATH

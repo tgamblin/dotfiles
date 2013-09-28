@@ -1,3 +1,3 @@
-if [ -f /opt/local/etc/bash_completion ]; then
-    . /opt/local/etc/bash_completion
+if [ -f $MACPORTS_HOME/etc/bash_completion ]; then
+    . $MACPORTS_HOME/etc/bash_completion
 fi
