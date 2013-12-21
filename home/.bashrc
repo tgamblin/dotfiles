@@ -147,7 +147,6 @@ fi
 # Likewise for grep
 export GREP_OPTIONS=--color=auto
 
-
 # disable stupid X11 programs that ask for your ssh password
 export SSH_ASKPASS=
 
