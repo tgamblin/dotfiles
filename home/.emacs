@@ -5,12 +5,13 @@
 (add-to-list 'load-path (expand-file-name "~/.elisp/"))
 
 (setq require-final-newline t)
-(setq inhibit-default-init t)           ; disable running annoying default fc init.
-(setq default-tab-width 4)              ; 2-wide tabs
-(global-set-key [?\M-g] 'goto-line)     ; use M-g as shortcut for goto-line
-(column-number-mode t)                  ; number columns
-(setq-default indent-tabs-mode nil)     ; use spaces instead of tabs
-(put 'upcase-region 'disabled nil)      ; enable upcase-region
+(setq inhibit-default-init t)            ; disable running annoying default fc init.
+(setq default-tab-width 4)               ; 2-wide tabs
+(global-set-key [?\M-g] 'goto-line)      ; use M-g as shortcut for goto-line
+(global-set-key [?\M-p] 'fill-paragraph) ; use M-p for paragraph fill.
+(column-number-mode t)                   ; number columns
+(setq-default indent-tabs-mode nil)      ; use spaces instead of tabs
+(put 'upcase-region 'disabled nil)       ; enable upcase-region
 
 (toggle-uniquify-buffer-names)
 
@@ -164,3 +165,22 @@
     (require 'xterm-frobs)
     (add-hook 'window-configuration-change-hook 'my-set-xterm-title)
     (add-hook 'emacs-startup-hook 'my-set-xterm-title)))
+
+;; ==== Variables customized from within emacs ================================
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(rst-level-1 ((t nil)))
+ '(rst-level-2 ((t nil)))
+ '(rst-level-3 ((t nil)))
+ '(rst-level-4 ((t nil)))
+ '(rst-level-5 ((t nil)))
+ '(rst-level-6 ((t nil))))
