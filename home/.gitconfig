@@ -18,7 +18,7 @@
     unadd = reset HEAD
 
 [push]
-	default = current
+	default = simple
 
 [credential]
 	helper = cache --timeout=43200
