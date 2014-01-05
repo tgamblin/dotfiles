@@ -1,4 +1,21 @@
-#!/usr/bin/env bash
+#!/bin/sh
+
+########################################
+# Things to add:
+########################################
+# Trackpad tracking speed set to fast
+# Mission Control with 6 desktops
+# Keyboard shortcuts for Desktops (Fkeys F1-F6)
+# F9 -> mission control
+# F10 -> application windows
+# Dock magnification on
+# Set Dock magnified icon size
+# Bind:
+#    Terminal to Desktop 1
+#    Calender -> 2
+#    Safari -> 3
+#    Mail -> 4
+# Desktop snap to grid, organize by name.
 
 #
 # Get readlink -f behavior when readlink doesn't support it
@@ -33,8 +50,11 @@ script_dir=$(dirname $(readlink_f "$0"))
 # Menu bar: disable transparency
 defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
 
-# Set sidebar icon size to medium
-defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
+# Set sidebar icon size to small (affects Mail sidebar)
+defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 1
+
+# Use function keys as standard function keys.
+defaults write com.apple.keyboard.fnState -int 1
 
 ###############################################################################
 # Trackpad, mouse, keyboard                                                   #
@@ -91,7 +111,7 @@ defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
 defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
 # Finder: show hidden files by default
-defaults write com.apple.finder AppleShowAllFiles -bool true
+# defaults write com.apple.finder AppleShowAllFiles -bool true
 
 # Finder: show all filename extensions
 # defaults write NSGlobalDomain AppleShowAllExtensions -bool true
@@ -143,8 +163,8 @@ chflags nohidden ~/Library
 # Enable highlight hover effect for the grid view of a stack (Dock)
 # defaults write com.apple.dock mouse-over-hilite-stack -bool true
 
-# Set the icon size of Dock items to 36 pixels
-defaults write com.apple.dock tilesize -int 36
+# Set the icon size of Dock items
+defaults write com.apple.dock tilesize -int 24
 
 # Position Dock on the right-hand side of the screen
 defaults write com.apple.dock orientation -string "right"
