@@ -27,3 +27,7 @@ pathadd $HOME/src/spack/bin
 
 # Visit installation
 pathadd /usr/local/visit/bin
+
+# Cram installation
+pathadd $HOME/src/cram/bin
+
