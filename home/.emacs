@@ -15,6 +15,17 @@
 
 (toggle-uniquify-buffer-names)
 
+; Comment regions or lines with M-#
+(defun comment-or-uncomment-region-or-line ()
+  "Comments or uncomments the region or the current line if there's no active region."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+        (setq beg (region-beginning) end (region-end))
+      (setq beg (line-beginning-position) end (line-end-position)))
+    (comment-or-uncomment-region beg end)))
+(global-set-key [?\M-#] 'comment-or-uncomment-region-or-line)
+
 ; strip trailing whitespace
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -124,7 +135,7 @@
   (setq-default standard-indent 2)
   (setq tab-width 2)
   (setq c-basic-offset 2)
-  (set-fill-column 80)
+  (set-fill-column 78)
   (c-set-offset 'innamespace 0))
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 

@@ -30,4 +30,3 @@ pathadd /usr/local/visit/bin
 
 # Cram installation
 pathadd $HOME/src/cram/bin
-
