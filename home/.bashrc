@@ -12,7 +12,7 @@ pathadd() {
         path="$2"
     fi
 
-    # Do the actual appending here.
+    # Do the actual prepending here.
     eval "oldvalue=\"\$$varname\""
     if [ -d "$path" ] && [[ ":$oldvalue:" != *":$path:"* ]]; then
         if [ -n "$oldvalue" ]; then

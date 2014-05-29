@@ -33,3 +33,6 @@ pathadd $HOME/src/cram/bin
 
 # Bower installation
 pathadd $HOME/src/bower/bin
+
+# Dev cmake
+pathadd $HOME/opt/cmake-dev/$SYS_TYPE/bin
