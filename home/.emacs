@@ -105,6 +105,10 @@
 (add-to-list 'auto-mode-alist '("\\.yy\\'" . c-mode))
 (add-to-list 'auto-mode-alist '("\\.ll\\'" . c-mode))
 
+; YAML Mode
+(autoload 'yaml-mode "yaml-mode")
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+
 ; Recognize Makefiles by prefix.
 (add-to-list 'auto-mode-alist '("/[iI]?[mM]akefile[^/]*\\'" . makefile-mode))
 (add-to-list 'auto-mode-alist '("^[Mm]ake\\..*\\'" . makefile-mode))

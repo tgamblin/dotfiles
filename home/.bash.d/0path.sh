@@ -30,3 +30,6 @@ pathadd /usr/local/visit/bin
 
 # Cram installation
 pathadd $HOME/src/cram/bin
+
+# Bower installation
+pathadd $HOME/src/bower/bin
