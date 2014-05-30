@@ -64,6 +64,7 @@
 ;; ==== Modes and suffixes ===================================================
 (autoload 'css-mode "css-mode")
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
+(add-to-list 'auto-mode-alist '("\\.less\\'" . css-mode))
 (setq cssm-indent-function #'cssm-c-style-indenter)
 
 (autoload 'cmake-mode "cmake-mode")
