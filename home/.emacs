@@ -82,6 +82,7 @@
 
 (autoload 'gitconfig-mode "gitconfig-mode")
 (add-to-list 'auto-mode-alist '("\\.gitconfig\\'" . gitconfig-mode))
+(add-to-list 'auto-mode-alist '("spackconfig\\'" . gitconfig-mode))
 
 (add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode))
 (add-to-list 'interpreter-mode-alist '("ruby1.8" . ruby-mode))
