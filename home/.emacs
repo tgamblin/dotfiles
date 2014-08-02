@@ -33,10 +33,14 @@
 (setq vc-follow-symlinks t)
 
 ;; ==== Color Setup ==========================================================
-(set-background-color "black")
-(set-foreground-color "white")
+;(set-background-color "black")
+;(set-foreground-color "white")
 ;(set-background-color "white")
 ;(set-foreground-color "black")
+
+(require 'color-theme)
+(color-theme-initialize)
+(color-theme-tgamblin)
 
 (set-face-background 'region "Navy")    ; navy background for selection
 (transient-mark-mode 1)                 ; Show selections with
@@ -45,7 +49,7 @@
 (setq font-lock-maximum-decoration t)
 
 ; fix emacs 22.1.1 not coloring comments
-(set-face-foreground 'font-lock-comment-face "red")
+; (set-face-foreground 'font-lock-comment-face "red")
 ; (set-face-foreground 'font-lock-comment-delimiter-face "red")
 
 
