@@ -52,8 +52,12 @@ esac
 if $interactive; then
     # Pick a good terminal for the machine we're on
     case $OS in
-        'Linux')   TERM='xterm-color' ;;
-        'Darwin' ) TERM='xterm-color' ;;
+        'Linux'|'Darwin')
+            if [ -e /usr/share/terminfo/*/xterm-256color ]; then
+                TERM='xterm-256color'
+            else
+                TERM='xterm-color'
+            fi ;;
         'AIX')     TERM='aixterm' ;;
         * )        TERM='vt100' ;;
     esac

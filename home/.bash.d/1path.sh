@@ -22,9 +22,6 @@ pathadd $HOME/src/homebrew/bin
 # LC sbin tools
 pathadd /usr/global/etc/bin
 
-# Spack bin directory
-pathadd $HOME/src/spack/bin
-
 # Visit installation
 pathadd /usr/local/visit/bin
 
