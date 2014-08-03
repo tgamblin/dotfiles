@@ -42,7 +42,6 @@
 ;; Brian Palmer for color-theme-library ideas and code
 ;; All the users that contributed their color themes.
 
-
 
 ;;; Code:
 (eval-when-compile

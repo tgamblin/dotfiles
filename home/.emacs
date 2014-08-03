@@ -1,3 +1,6 @@
+;; ===========================================================================
+;; General Options
+;; ===========================================================================
 ; No info screen at startup.
 (setq inhibit-startup-message t)
 
@@ -13,7 +16,11 @@
 (setq-default indent-tabs-mode nil)      ; use spaces instead of tabs
 (put 'upcase-region 'disabled nil)       ; enable upcase-region
 
+; If two files have the same name, name by enclosing-folder/filename
 (toggle-uniquify-buffer-names)
+
+; Filename completion ignores case on Mac OS X
+(set 'read-file-name-completion-ignore-case nil)
 
 ; Comment regions or lines with M-#
 (defun comment-or-uncomment-region-or-line ()
@@ -32,28 +39,51 @@
 ; No prompt on edit version-controlled files through symlinks
 (setq vc-follow-symlinks t)
 
-;; ==== Color Setup ==========================================================
-;(set-background-color "black")
-;(set-foreground-color "white")
-;(set-background-color "white")
-;(set-foreground-color "black")
-
-(require 'color-theme)
-(color-theme-initialize)
-(color-theme-tgamblin)
-
+;; ===========================================================================
+;; Color Setup
+;; ===========================================================================
+;; General
+;; ---------------------------------------------------------------------------
 (set-face-background 'region "Navy")    ; navy background for selection
 (transient-mark-mode 1)                 ; Show selections with
 
 (global-font-lock-mode t)
 (setq font-lock-maximum-decoration t)
 
-; fix emacs 22.1.1 not coloring comments
+;; Color hex colors in elisp mode
+;; ---------------------------------------------------------------------------
+(defun xah-syntax-color-hex ()
+  "Syntax color hex color spec such as #ff1100 in current buffer."
+  (interactive)
+  (font-lock-add-keywords
+   nil
+   '(("#[abcdef[:digit:]]\\{6\\}"
+      (0 (put-text-property
+          (match-beginning 0)
+          (match-end 0)
+          'face (list :background (match-string-no-properties 0)))))))
+  (font-lock-fontify-buffer))
+(add-hook 'emacs-lisp-mode-hook 'xah-syntax-color-hex)
+
+;; color-theme.el
+;; ---------------------------------------------------------------------------
+(require 'color-theme)
+(color-theme-initialize)
+(color-theme-tgamblin)
+
+;; Use this when not using color-theme.el
+;; ---------------------------------------------------------------------------
+; (set-background-color "black")   (set-foreground-color "white")
+; (set-background-color "white")   (set-foreground-color "black")
+
+; fix emacs 22.1.1 not coloring comments (if not using color-theme)
 ; (set-face-foreground 'font-lock-comment-face "red")
 ; (set-face-foreground 'font-lock-comment-delimiter-face "red")
 
 
-;; ==== Making scripts executable ============================================
+;; ===========================================================================
+;; Making scripts executable
+;; ===========================================================================
 ;; Automatically make scripts executable if they have shebant (#!) in them
 (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
@@ -65,7 +95,9 @@
 (add-hook 'after-save-hook 'auto-mode)
 
 
-;; ==== Modes and suffixes ===================================================
+;; ===========================================================================
+;; Modes and suffixes
+;; ===========================================================================
 (autoload 'css-mode "css-mode")
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 (add-to-list 'auto-mode-alist '("\\.less\\'" . css-mode))
@@ -127,10 +159,9 @@
 (add-to-list 'auto-mode-alist '("\\.f\\'" . f90-mode))
 
 
-;; ==== Org Mode Setup =======================================================
-;; (add-hook 'before-save-hook 'org-update-all-dblocks)
-
-;; ==== C Mode Setup =========================================================
+;; ===========================================================================
+;; C Mode Setup
+;; ===========================================================================
 (setq c-default-style '((java-mode . "java")
                         (awk-mode . "awk")
                         (other . "linux")))
@@ -172,7 +203,9 @@
 (add-hook 'reb-mode-hook 'my-reb-hook)
 
 
-;; ==== Set terminal title ====================================================
+;; ===========================================================================
+;; Set terminal title
+;; ===========================================================================
 (require 'xterm-frobs)
 (defun my-set-xterm-title ()
   (xterm-set-window-title
@@ -187,7 +220,9 @@
     (add-hook 'window-configuration-change-hook 'my-set-xterm-title)
     (add-hook 'emacs-startup-hook 'my-set-xterm-title)))
 
-;; ==== Variables customized from within emacs ================================
+;; ===========================================================================
+;; Variables customized from within emacs
+;; ===========================================================================
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
