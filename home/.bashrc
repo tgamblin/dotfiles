@@ -131,7 +131,6 @@ if [ "$OS" = 'Darwin' ]; then
     pathadd $MACPORTS_HOME/libexec/gnubin
 fi
 
-
 # Figure out which ls we're using and set some options.
 if ls --color -d . >/dev/null 2>&1; then
     export LS_OPTIONS="--color=auto -F -B"
@@ -184,7 +183,8 @@ pathadd .
 
 # Use TextMate if we're in a GUI session and it exists, otherwise emacs.
 # Do editor setup after path setup as it depends on the PATH
-if [ "$Apple_PubSub_Socket_Render" != "" ]; then
+use_textmate=false
+if [ "$Apple_PubSub_Socket_Render" != "" -a "$use_textmate" = "true" ]; then
     mate=$(which mate 2>/dev/null)
     if [ ! -z "$mate" ]; then
         export EDITOR="mate -w"
