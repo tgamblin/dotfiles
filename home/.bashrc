@@ -55,6 +55,7 @@ if $interactive; then
         'Linux'|'Darwin')
             if [ -e /usr/share/terminfo/*/xterm-256color ]; then
                 TERM='xterm-256color'
+                export CLICOLOR="YES"
             else
                 TERM='xterm-color'
             fi ;;
@@ -142,8 +143,12 @@ alias ls="ls $LS_OPTIONS"
 alias ll="ls -lh $LS_OPTIONS"
 alias l=ll
 
-if [ -e "$(which dircolors)" -a -e ~/.dir_colors ]; then
-    eval $(dircolors ~/.dir_colors)
+if [ -e "$(which dircolors)" ]; then
+    if [ "$TERM" = "xterm-256color" -a -e ~/.dir_colors.256 ]; then
+        eval $(dircolors ~/.dir_colors.256)
+    else
+        eval $(dircolors ~/.dir_colors)
+    fi
 fi
 
 
