@@ -5,7 +5,7 @@ set gray          = "%{\033[0;37m%}"
 set ltblue        = "%{\033[1;34m%}"
 set none          = "%{\033[0m%}"
 set set_title_cmd = "%{\033]0;%M:%~\007%}"
-set prompt="${set_title_cmd}${gray}(${ltblue}%m${gray}):${cyan}%c${gray}%#${none} "
+set prompt="${set_title_cmd}${gray}(${ltblue}%m${gray}):${cyan}%c${gray}%%${none} "
 
 set autolist=ambiguous:
 bindkey -e
@@ -50,7 +50,7 @@ endif
 alias ls '$LS $LS_OPTIONS';
 alias l  '$LS -l $L_OPTIONS $LS_OPTIONS';
 alias ll '$LS -l $LL_OPTIONS $LS_OPTIONS';
- 
+
 alias rb   "rm -f *~ .*~ \#* .\#*"
 alias f    'finger'
 alias more 'less'
@@ -59,7 +59,7 @@ alias more 'less'
 setenv EDITOR "mate -w"
 setenv MANPATH ":"
 
-# Init other config files as necessary.  File should be put in ~/.tcsh.d, 
+# Init other config files as necessary.  File should be put in ~/.tcsh.d,
 # and can be disabled by putting a ~ anywhere in the name.
 # Thanks to http://scottcollins.blogdns.net/journal/
 set script_dir="~/.tcsh.d"
