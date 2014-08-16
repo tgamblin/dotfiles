@@ -74,7 +74,7 @@ if $interactive; then
 
     # use the system's max stack size: prevents crashes on cluster apps
     ulimit -s $(ulimit -Hs)
-    ulimit -c unlimited
+    ulimit -c $(ulimit -Hc)
 
     # Make bash set LINES and COLUMNS after each command.
     shopt -s checkwinsize
@@ -134,7 +134,7 @@ if [ "$OS" = 'Darwin' ]; then
     pathadd $MACPORTS_HOME/libexec/gnubin
 fi
 
-# Figure out which ls we're using and set some options.
+# Get ls set up with some decent colors.
 if ls --color -d . >/dev/null 2>&1; then
     export LS_OPTIONS="--color=auto -F -B"
 elif ls -G -d . >/dev/null 2>&1; then

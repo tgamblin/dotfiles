@@ -1,63 +1,143 @@
-#!/bin/tcsh
+# Prepends directories to path, if they exist.
+#      pathadd /path/to/dir            # add to PATH
+# or   pathadd OTHERPATH /path/to/dir  # add to OTHERPATH
+alias pathadd 'set _pa_args = (\!*); \\
+    ## If no variable name is supplied, just append to PATH \\
+    ## otherwise append to that variable. \\
+    \\
+    set _pa_varname = PATH; \\
+    set _pa_new_path = $_pa_args[1]; \\
+    [ $#_pa_args -gt 1 ] && \\
+        set _pa_varname = $_pa_args[1] && \\
+        set _pa_new_path = $_pa_args[2]; \\
+    \\
+    ## Check whether the variable was previously set or not. \\
+    \\
+    set _pa_set = 0; \\
+    eval if \$\?$_pa_varname set _pa_set=1; \\
+    set _pa_old_value = ""; \\
+    [ $_pa_set -eq 1 ] && eval set _pa_old_value=\$$_pa_varname; \\
+    \\
+    ## Do the actual prepending to the path here. \\
+    eval "if ( -d $_pa_new_path && \:$_pa_old_value\: !~ *\:$_pa_new_path\:* ) then \\
+        [ -n "$_pa_old_value" ] && setenv $_pa_varname $_pa_new_path\:$_pa_old_value \\
+        [ -z "$_pa_old_value" ] && setenv $_pa_varname $_pa_new_path \\
+    endif";'
 
-set cyan          = "%{\033[0;36m%}"
-set gray          = "%{\033[0;37m%}"
-set ltblue        = "%{\033[1;34m%}"
-set none          = "%{\033[0m%}"
-set set_title_cmd = "%{\033]0;%M:%~\007%}"
-set prompt="${set_title_cmd}${gray}(${ltblue}%m${gray}):${cyan}%c${gray}%%${none} "
+# Remove duplicate entries from PATH
+set _clean_path_awk_cmd = '{for (i=1;i<=NF;i++) { if ( \!x[$i]++ ) printf("%s:",$i); }}'
+alias clean_path 'setenv PATH `echo $PATH | awk -F: "$_clean_path_awk_cmd"`'
 
+# Source a file if it exists
+alias source_if_exists '[ -f \!:1 ] && source \!:1;'
+
+# Turn on dotkit
+source_if_exists /etc/csh.cshrc
+source_if_exists /usr/local/tools/dotkit/init.csh
+
+# Turn on ctrl-R history searching like bash.
 set autolist=ambiguous:
 bindkey -e
 bindkey "^R" i-search-back
 
-alias screen 'screen -R -D'
-
-
-set LS = ls
-set LS_OPTIONS = "-F"
-set L_OPTIONS  = "-l"
-set LL_OPTIONS = "$L_OPTIONS"
-
 # os specific TERM & ls setup stuff
 set OS = `uname -s`
 
-if ($OS == "Linux") then
-    setenv TERM 'xterm-color'
-    setenv PATH "${HOME}/bin/linux:${PATH}"
-    set LS_OPTIONS = "--color=auto -B $LS_OPTIONS"
-    set L_OPTIONS = "-h $L_OPTIONS"
+# Determine if shell is interactive
+set interactive=false
+if ($?prompt) set interactive=true
 
-else if ($OS == "Darwin") then
-    setenv TERM 'xterm-color'
-    set LS_OPTIONS = "-B $LS_OPTIONS"
-    set L_OPTIONS = "-h $L_OPTIONS"
-    set GLS = /opt/local/bin/gls
-    if (-e "$GLS") then
-        set LS = $GLS
-        set LS_OPTIONS = "--color=auto $LS_OPTIONS"
-    endif
+if ( $interactive == true ) then
+    # Pick a good terinal for the machine we're on
+    switch ($OS)
+    case Linux:
+    case Darwin:
+        if ( -e /usr/share/terminfo/*/xterm-256color ) then
+            setenv TERM xterm-256color
+            setenv CLICOLOR YES
+        else
+            setenv TERM xterm-color
+        endif
+        breaksw
+    case AIX:
+        setenv TERM aixterm
+        breaksw
+    default:
+        setenv TERM vt100
+        breaksw
+    endsw
 
-else if ($OS == "AIX") then
-    setenv TERM 'aixterm'
+    # X settings
+    [ -f ~/.Xdefaults ] && xrdb ~/.Xdefaults
 
-else if ($OS == "SunOS") then
-    setenv TERM 'vt100'
-else
-    setenv TERM 'vt100'
+    # Use an erase character that emacs understands.
+    stty erase '^?'
+
+    # Set some limits
+    ulimit -s `ulimit -Hs`
+    ulimit -c `ulimit -Hc`
+
+    set red="%{\033[0;31m%}"
+    set cyan="%{\033[0;36m%}"
+    set gray="%{\033[1;90m%}"
+    set green="%{\033[0;32m%}"
+    set ltgreen="%{\033[1;32m%}"
+    set ltblue="%{\033[1;34m%}"
+    set reset="%{\033[0m%}"
+
+    # Different color prompts for different types of shells.
+    set host_color = "$ltblue"
+    if ( "$USER" == "root" ) set host_color = "$red"
+    if ($?SLURM_JOBID)       set host_color = "$green"
+
+    set set_title_cmd = "%{\033]0;%M:%~\007%}"
+    set prompt="${set_title_cmd}${gray}(${host_color}%m${gray}):${cyan}%c${gray}%%${reset} "
 endif
 
-alias ls '$LS $LS_OPTIONS';
-alias l  '$LS -l $L_OPTIONS $LS_OPTIONS';
-alias ll '$LS -l $LL_OPTIONS $LS_OPTIONS';
+# Default editor is emacs -nw.
+setenv EDITOR "emacs -nw"
+
+# Macports setup is only done on Darwin.
+if ( "$OS" == 'Darwin' ) then
+    setenv MACPORTS_HOME $HOME/macports
+    pathadd $MACPORTS_HOME/bin
+
+    # put GNU coreutils in path ahead of BSD tools
+    pathadd $MACPORTS_HOME/libexec/gnubin
+endif
+
+# Get ls set up with some decent colors.
+if { ls --color -d . >&/dev/null } then
+    setenv LS_OPTIONS "--color=auto -F -B"
+else if { ls -G -d . >&/dev/null } then
+    setenv LS_OPTIONS "-G -F"
+endif
+
+alias ls 'ls $LS_OPTIONS';
+alias ll 'ls -l $L_OPTIONS $LS_OPTIONS';
+alias l  ll
+
+if ( -e `which dircolors` ) then
+    if ( "$TERM" == "xterm-256color" && -e ~/.dir_colors.256 ) then
+        eval `dircolors -c ~/.dir_colors.256`
+    else
+        eval `dircolors -c ~/.dir_colors`
+    endif
+endif
+
+# Likewise for grep
+setenv GREP_OPTIONS --color=auto
+
+# disable stupid X11 programs that ask for your ssh password
+setenv SSH_ASKPASS ""
+
+# Python startup file
+setenv PYTHONSTARTUP ~/.python
 
 alias rb   "rm -f *~ .*~ \#* .\#*"
 alias f    'finger'
 alias more 'less'
-
-#setenv EDITOR "emacs -nw"
-setenv EDITOR "mate -w"
-setenv MANPATH ":"
+alias screen 'screen -R -D'
 
 # Init other config files as necessary.  File should be put in ~/.tcsh.d,
 # and can be disabled by putting a ~ anywhere in the name.
@@ -69,13 +149,7 @@ if (-d $script_dir) then
     end
 endif
 
-set path = ( "." "$HOME/bin" "$PATH" "/bin" "/usr/sbin" "/sbin" "/usr/bin" "/usr/local/bin" "/opt/bin" )
-
-
-# Removes duplicate elements from path environment variables without affecting precedence order
-#function clean_path {
-#    for arg in $@; do
-#        export $arg=`perl -e "print join(q{:}, grep(!\\$saw{\\$_}++,split(/:/,\\$ENV{$arg})));"`
-#    done
-#}
-#clean_path PATH DYLD_LIBRARY_PATH
+pathadd /usr/sbin
+pathadd ${HOME}/sbin
+pathadd .
+clean_path
