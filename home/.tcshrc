@@ -2,23 +2,17 @@
 #      pathadd /path/to/dir            # add to PATH
 # or   pathadd OTHERPATH /path/to/dir  # add to OTHERPATH
 alias pathadd 'set _pa_args = (\!*); \\
-    ## If no variable name is supplied, just append to PATH \\
-    ## otherwise append to that variable. \\
-    \\
     set _pa_varname = PATH; \\
     set _pa_new_path = $_pa_args[1]; \\
     [ $#_pa_args -gt 1 ] && \\
         set _pa_varname = $_pa_args[1] && \\
         set _pa_new_path = $_pa_args[2]; \\
     \\
-    ## Check whether the variable was previously set or not. \\
-    \\
     set _pa_set = 0; \\
     eval if \$\?$_pa_varname set _pa_set=1; \\
     set _pa_old_value = ""; \\
     [ $_pa_set -eq 1 ] && eval set _pa_old_value=\$$_pa_varname; \\
     \\
-    ## Do the actual prepending to the path here. \\
     eval "if ( -d $_pa_new_path && \:$_pa_old_value\: !~ *\:$_pa_new_path\:* ) then \\
         [ -n "$_pa_old_value" ] && setenv $_pa_varname $_pa_new_path\:$_pa_old_value \\
         [ -z "$_pa_old_value" ] && setenv $_pa_varname $_pa_new_path \\
@@ -39,6 +33,9 @@ source_if_exists /usr/local/tools/dotkit/init.csh
 set autolist=ambiguous:
 bindkey -e
 bindkey "^R" i-search-back
+
+# Enable saving history
+set savehist = 1000
 
 # os specific TERM & ls setup stuff
 set OS = `uname -s`

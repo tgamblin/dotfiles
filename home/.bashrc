@@ -1,35 +1,37 @@
+########################################################################
 # Prepends directories to path, if they exist.
 #      pathadd /path/to/dir            # add to PATH
 # or   pathadd OTHERPATH /path/to/dir  # add to OTHERPATH
-#
-pathadd() {
+########################################################################
+function pathadd {
     # If no variable name is supplied, just append to PATH
     # otherwise append to that variable.
-    varname=PATH
-    path="$1"
+    _pa_varname=PATH
+    _pa_new_path="$1"
     if [ -n "$2" ]; then
-        varname="$1"
-        path="$2"
+        _pa_varname="$1"
+        _pa_new_path="$2"
     fi
 
     # Do the actual prepending here.
-    eval "oldvalue=\"\$$varname\""
-    if [ -d "$path" ] && [[ ":$oldvalue:" != *":$path:"* ]]; then
-        if [ -n "$oldvalue" ]; then
-            eval "export $varname=\"$path:$oldvalue\""
+    eval "_pa_oldvalue=\$${_pa_varname}"
+
+    if [ -d "$_pa_new_path" ] && [[ ":$_pa_oldvalue:" != *":$_pa_new_path:"* ]]; then
+        if [ -n "$_pa_oldvalue" ]; then
+            eval "export $_pa_varname=\"$_pa_new_path:$_pa_oldvalue\""
         else
-            export $varname="$path"
+            export $_pa_varname="$_pa_new_path"
         fi
     fi
 }
 
 # Remove duplicate entries from PATH
-clean_path() {
+function clean_path {
     export PATH=$(echo "$PATH" | awk -F: '{for (i=1;i<=NF;i++) { if ( !x[$i]++ ) printf("%s:",$i); }}')
 }
 
 # Source a file if it exists
-source_if_exists() {
+function source_if_exists {
     if [ -f "$1" ]; then
         . "$1"
     fi
