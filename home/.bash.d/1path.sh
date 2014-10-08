@@ -33,3 +33,6 @@ pathadd $HOME/src/bower/bin
 
 # Dev cmake
 pathadd $HOME/opt/cmake-dev/$SYS_TYPE/bin
+
+# lic tool
+pathadd $HOME/src/lic/bin
