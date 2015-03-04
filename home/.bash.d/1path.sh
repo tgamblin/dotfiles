@@ -11,7 +11,8 @@ pathadd $HOME/src/boxfish/bin
 pathadd PYTHONPATH $HOME/src/boxfish
 
 # bib2xhtml
-pathadd $HOME/opt/bib2xhtml-2.35
+#pathadd $HOME/opt/bib2xhtml-2.35
+pathadd /Users/gamblin2/src/spack/opt/macosx_10.9_x86_64/gcc@4.8.1/bib2xhtml@3.0-15-gf506/bin
 
 # Charm++
 pathadd $HOME/src/charm-6.4.0/net-darwin-x86_64/bin
