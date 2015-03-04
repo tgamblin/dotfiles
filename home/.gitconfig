@@ -15,6 +15,10 @@
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 	lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --branches=* --
 
+	graph = log --color --graph --pretty=format:'%s' --abbrev-commit --branches=* --
+
+	tarball = !name="$(basename $(git rev-parse --show-toplevel))" && head=$(git log -1 --format="%h" HEAD) && dstamp=$(git log -1 --format="%ci" HEAD | awk '{print $1}') && filename="${name}-${dstamp}-${head}" && git archive --format=tar.gz --prefix="${filename}/" HEAD -o ${filename}.tar.gz
+
     st = status
     ci = commit
     co = checkout
