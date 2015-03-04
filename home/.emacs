@@ -10,8 +10,6 @@
 (setq require-final-newline t)
 (setq inhibit-default-init t)            ; disable running annoying default fc init.
 (setq default-tab-width 4)               ; 2-wide tabs
-(global-set-key [?\M-g] 'goto-line)      ; use M-g as shortcut for goto-line
-(global-set-key [?\M-p] 'fill-paragraph) ; use M-p for paragraph fill.
 (column-number-mode t)                   ; number columns
 (setq-default indent-tabs-mode nil)      ; use spaces instead of tabs
 (put 'upcase-region 'disabled nil)       ; enable upcase-region
@@ -38,6 +36,20 @@
 
 ; No prompt on edit version-controlled files through symlinks
 (setq vc-follow-symlinks t)
+
+; Recompilation
+(defun recompile-quietly ()
+  "Re-compile without changing the window configuration."
+  (interactive)
+  (save-window-excursion
+    (recompile)))
+
+;; ===========================================================================
+;; Keyboard bindings
+;; ===========================================================================
+(global-set-key [?\M-g] 'goto-line)      ; use M-g as shortcut for goto-line
+(global-set-key [?\M-p] 'fill-paragraph) ; use M-p for paragraph fill.
+(global-set-key [?\M-m] 'recompile-quietly)
 
 ;; ===========================================================================
 ;; Color Setup
@@ -100,6 +112,7 @@
 ;; ===========================================================================
 (autoload 'css-mode "css-mode")
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . css-mode))
 (add-to-list 'auto-mode-alist '("\\.less\\'" . css-mode))
 (setq cssm-indent-function #'cssm-c-style-indenter)
 
@@ -146,6 +159,11 @@
 ; YAML Mode
 (autoload 'yaml-mode "yaml-mode")
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+
+; Web template mode
+(autoload 'web-mode "web-mode")
+(add-to-list 'auto-mode-alist '("\\.vm\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.ftl\\'" . web-mode))
 
 ; Recognize Makefiles by prefix.
 (add-to-list 'auto-mode-alist '("/[iI]?[mM]akefile[^/]*\\'" . makefile-mode))
