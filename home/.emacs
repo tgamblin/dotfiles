@@ -159,11 +159,16 @@
 ; YAML Mode
 (autoload 'yaml-mode "yaml-mode")
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
 
 ; Web template mode
 (autoload 'web-mode "web-mode")
 (add-to-list 'auto-mode-alist '("\\.vm\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.ftl\\'" . web-mode))
+
+; Nix package mode
+(autoload 'nix-mode "nix-mode")
+(add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 
 ; Recognize Makefiles by prefix.
 (add-to-list 'auto-mode-alist '("/[iI]?[mM]akefile[^/]*\\'" . makefile-mode))
@@ -176,6 +181,17 @@
 ; Prefer Fortran 90 mode over Fortran mode
 (add-to-list 'auto-mode-alist '("\\.f\\'" . f90-mode))
 
+; Prefer Fortran 90 mode over Fortran mode
+(add-to-list 'auto-mode-alist '("\\.f\\'" . f90-mode))
+
+; Markdown mode
+(autoload 'markdown-mode "markdown-mode")
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+; Graphviz dot mode
+(autoload 'graphviz-dot-mode "graphviz-dot-mode")
+(add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
+
 
 ;; ===========================================================================
 ;; C Mode Setup
@@ -184,7 +200,7 @@
                         (awk-mode . "awk")
                         (other . "linux")))
 
-(setq c-backslash-column 96)
+(setq c-backslash-column 78)
 (setq c-backslash-max-column 120)
 
 (require 'c-header-switch)
