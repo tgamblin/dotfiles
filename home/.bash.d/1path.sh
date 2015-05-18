@@ -37,3 +37,6 @@ pathadd $HOME/opt/cmake-dev/$SYS_TYPE/bin
 
 # lic tool
 pathadd $HOME/src/lic/bin
+
+# hashdist
+pathadd $HOME/src/hashdist/bin
