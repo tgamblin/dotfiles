@@ -17,6 +17,10 @@ function pathadd {
     eval "_pa_oldvalue=\$${_pa_varname}"
 
     if [ -d "$_pa_new_path" ] && [[ ":$_pa_oldvalue:" != *":$_pa_new_path:"* ]]; then
+        # convert path to absolute path if it is not one
+        _pa_new_path=$(cd $_pa_new_path && pwd)
+
+        # Add it to the PATH
         if [ -n "$_pa_oldvalue" ]; then
             eval "export $_pa_varname=\"$_pa_new_path:$_pa_oldvalue\""
         else
