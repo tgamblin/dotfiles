@@ -71,8 +71,8 @@ if ( $interactive == true ) then
     stty erase '^?'
 
     # Set some limits
-    ulimit -s `ulimit -Hs`
-    ulimit -c `ulimit -Hc`
+#    ulimit -s `ulimit -Hs`
+#    ulimit -c `ulimit -Hc`
 
     set red="%{\033[0;31m%}"
     set cyan="%{\033[0;36m%}"
@@ -139,10 +139,10 @@ alias screen 'screen -R -D'
 # Init other config files as necessary.  File should be put in ~/.tcsh.d,
 # and can be disabled by putting a ~ anywhere in the name.
 # Thanks to http://scottcollins.blogdns.net/journal/
-set script_dir="~/.tcsh.d"
-if (-d $script_dir) then
-    foreach config_file (`find $script_dir ! -path '*~*' -type f`)
-        source $config_file
+set _extra_scripts = ( $HOME/.tcsh.d/* )
+if ( "$_extra_scripts" != "$HOME/.bash.d/\*" ) then
+    foreach _script ( $_extra_scripts )
+        if ( "$_script" !~ "*~"  ) source $_script
     end
 endif
 

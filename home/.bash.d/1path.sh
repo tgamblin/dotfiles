@@ -40,3 +40,6 @@ pathadd $HOME/src/lic/bin
 
 # hashdist
 pathadd $HOME/src/hashdist/bin
+
+# libmsr
+pathadd $HOME/src/libmsr/$SYS_TYPE/cmd

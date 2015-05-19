@@ -29,7 +29,7 @@
           (t (reduce 'append
                      (mapcar (lambda (x)
                                (mapcar (lambda (y)
-                                         (append (list x) y))
+                                         (append y (list x)))
                                        (cartesian rest)))
                              first))))))
 
