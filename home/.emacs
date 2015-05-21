@@ -8,7 +8,7 @@
 (add-to-list 'load-path (expand-file-name "~/.elisp/"))
 
 (setq require-final-newline t)
-(setq inhibit-default-init t)            ; disable running annoying default fc init.
+(setq inhibit-default-init t)            ; disable running default fc init.
 (setq default-tab-width 4)               ; 2-wide tabs
 (column-number-mode t)                   ; number columns
 (setq-default indent-tabs-mode nil)      ; use spaces instead of tabs
@@ -22,7 +22,8 @@
 
 ; Comment regions or lines with M-#
 (defun comment-or-uncomment-region-or-line ()
-  "Comments or uncomments the region or the current line if there's no active region."
+  "Comments or uncomments the region or the current line if
+   there's no active region."
   (interactive)
   (let (beg end)
     (if (region-active-p)
@@ -174,6 +175,10 @@
 (add-to-list 'auto-mode-alist '("/[iI]?[mM]akefile[^/]*\\'" . makefile-mode))
 (add-to-list 'auto-mode-alist '("^[Mm]ake\\..*\\'" . makefile-mode))
 
+; QMake stuff
+(autoload 'qt-pro-mode "qt-pro")
+(add-to-list 'auto-mode-alist '("\\.pr[iof]$" . qt-pro-mode))
+
 ; R files trigger R mode
 (autoload 'r-mode "~/.elisp/ess-12.09-1/lisp/ess-site")
 (add-to-list 'auto-mode-alist '("\\.R\\'" . r-mode))
@@ -192,6 +197,18 @@
 (autoload 'graphviz-dot-mode "graphviz-dot-mode")
 (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
 
+<<<<<<< HEAD
+; ARES input decks.
+(autoload 'ares-mode "ares-mode")
+(add-to-list 'auto-mode-alist '("\\.ares\\'" . ares-mode))
+
+
+=======
+;; ===========================================================================
+;; Nice line numbering (see ~/.elisp/linums.el)
+;; ===========================================================================
+;(require 'linums)
+>>>>>>> .emacs  tweaks
 
 ;; ===========================================================================
 ;; C Mode Setup
@@ -214,7 +231,7 @@
   (c-set-offset 'innamespace 0))
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 
-;; ==== Regex builder setup ===================================================
+;; ==== Regex builder setup ==================================================
 (defun reb-query-replace-this-regxp (replace)
   "Uses the regexp built with re-builder to query the target buffer.
    This function must be run from within the re-builder buffer, not the target
