@@ -174,6 +174,10 @@
 (add-to-list 'auto-mode-alist '("/[iI]?[mM]akefile[^/]*\\'" . makefile-mode))
 (add-to-list 'auto-mode-alist '("^[Mm]ake\\..*\\'" . makefile-mode))
 
+; QMake stuff
+(autoload 'qt-pro-mode "qt-pro")
+(add-to-list 'auto-mode-alist '("\\.pr[iof]$" . qt-pro-mode))
+
 ; R files trigger R mode
 (autoload 'r-mode "~/.elisp/ess-12.09-1/lisp/ess-site")
 (add-to-list 'auto-mode-alist '("\\.R\\'" . r-mode))
@@ -191,6 +195,11 @@
 ; Graphviz dot mode
 (autoload 'graphviz-dot-mode "graphviz-dot-mode")
 (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
+
+; ARES input decks.
+(autoload 'ares-mode "ares-mode")
+(add-to-list 'auto-mode-alist '("\\.ares\\'" . ares-mode))
+
 
 
 ;; ===========================================================================
