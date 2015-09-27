@@ -197,18 +197,15 @@
 (autoload 'graphviz-dot-mode "graphviz-dot-mode")
 (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode))
 
-<<<<<<< HEAD
 ; ARES input decks.
 (autoload 'ares-mode "ares-mode")
 (add-to-list 'auto-mode-alist '("\\.ares\\'" . ares-mode))
 
 
-=======
 ;; ===========================================================================
 ;; Nice line numbering (see ~/.elisp/linums.el)
 ;; ===========================================================================
 ;(require 'linums)
->>>>>>> .emacs  tweaks
 
 ;; ===========================================================================
 ;; C Mode Setup
