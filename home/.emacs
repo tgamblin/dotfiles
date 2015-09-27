@@ -201,7 +201,6 @@
 (autoload 'ares-mode "ares-mode")
 (add-to-list 'auto-mode-alist '("\\.ares\\'" . ares-mode))
 
-
 ;; ===========================================================================
 ;; Nice line numbering (see ~/.elisp/linums.el)
 ;; ===========================================================================
