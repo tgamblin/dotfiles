@@ -19,6 +19,12 @@
 
 	tarball = !name="$(basename $(git rev-parse --show-toplevel))" && head=$(git log -1 --format="%h" HEAD) && dstamp=$(git log -1 --format="%ci" HEAD | awk '{print $1}') && filename="${name}-${dstamp}-${head}" && git archive --format=tar.gz --prefix="${filename}/" HEAD -o ${filename}.tar.gz
 
+	# Show number of commits made by users
+    contrib = !printf '%7s %-30s %s\n' COMMITS NAME EMAIL &&  git log --branches --pretty=format:'%<(30)%aN %aE' -- | sort | uniq -c | sort -nr
+
+	# Show number of lines contributed by users
+	lcontrib = "!for file in $(git ls-tree --name-only -r HEAD); do git blame -w --line-porcelain $file | sed -n '/^[0-9a-f]\\{40\\}/,/^filename / { /^author /h; /^filename /{n;/^\\s*\\(\\#.*\\)\\?$/!{x;s/^author //p} } }'; done | sort | uniq -c | sort -nr"
+
     st = status
     ci = commit
     co = checkout
@@ -39,5 +45,8 @@
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 
 [mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	cmd = /Users/gamblin2/Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
