@@ -80,6 +80,9 @@ function readlink_f {
 # Directory to link files into
 link_dest=$HOME
 
+# Ensure that the script, as called, is a symlink
+[[ -L "$0" ]] || error "Something isn't right: $0 is not a link."
+
 # Location of the repository the link script lives in
 repository=$(dirname $(dirname $(readlink_f "$0")))
 
