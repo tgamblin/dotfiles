@@ -1,5 +1,7 @@
-if [ -d /usr/libexec/java_home ]; then
-    export JAVA_HOME=$(/usr/libexec/java_home -v1.8)
+JAVA_VERSION=1.7
+
+if [ -x /usr/libexec/java_home ]; then
+    export JAVA_HOME=$(/usr/libexec/java_home -v$JAVA_VERSION)
     export ATLAS_HOME=/usr/share/atlassian-plugin-sdk
     export M2_HOME=$ATLAS_HOME/apache-maven
 
