@@ -127,6 +127,7 @@ export HISTSIZE=10000
 
 # Default editor (see below for TextMate extras)
 alias emacs='emacs -nw'
+alias em='emacs -nw'
 export EDITOR="emacs"
 
 # Macports setup is only done on Darwin.
