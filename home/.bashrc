@@ -126,9 +126,10 @@ export HISTCONTROL=ignoreboth    # don't save duplicate entries
 export HISTSIZE=10000
 
 # Default editor (see below for TextMate extras)
-alias emacs='emacs -nw'
-alias em='emacs -nw'
-export EDITOR="emacs"
+export EDITOR="emacs -nw"
+alias emacs="$EDITOR"
+alias em="$EDITOR"
+
 
 # Macports setup is only done on Darwin.
 if [ "$OS" = 'Darwin' ]; then
