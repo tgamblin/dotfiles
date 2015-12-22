@@ -25,6 +25,10 @@
 	# Show number of lines contributed by users
 	lcontrib = "!for file in $(git ls-tree --name-only -r HEAD); do git blame -w --line-porcelain $file | sed -n '/^[0-9a-f]\\{40\\}/,/^filename / { /^author /h; /^filename /{n;/^\\s*\\(\\#.*\\)\\?$/!{x;s/^author //p} } }'; done | sort | uniq -c | sort -nr"
 
+    # purge merged branches.
+	bpurge = "!git branch --merged | egrep -v '^\\*|master|develop|release' | xargs -n 1 git branch -d"
+	bpurge-force = "!git branch --merged | egrep -v '^\\*|master|develop|release' | xargs -n 1 git branch -D"
+
     st = status
     ci = commit
     co = checkout
@@ -49,4 +53,4 @@
 	trustExitCode = true
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+	path =
