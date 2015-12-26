@@ -125,11 +125,19 @@ shopt -s histappend              # append instead of overwrite (good for multipl
 export HISTCONTROL=ignoreboth    # don't save duplicate entries
 export HISTSIZE=10000
 
-# Default editor (see below for TextMate extras)
-export EDITOR="emacs -nw"
+#
+# Emacs setup (see below for TextMate extras)
+# This sets up emacs in server mode.
+#
+export EDITOR='emacsclient -t -nw'   # Set up emacs as a server
+#export EDITOR="emacs -nw"           # Set up emacs without server.
+
+# Various emacs aliases.
+export ALTERNATE_EDITOR=""
+alias estop="emacsclient -e '(client-save-kill-emacs)'"
 alias emacs="$EDITOR"
 alias em="$EDITOR"
-
+alias e="$EDITOR"
 
 # Macports setup is only done on Darwin.
 if [ "$OS" = 'Darwin' ]; then
