@@ -12,34 +12,74 @@
 	excludesfile = /Users/gamblin2/.gitignore_global
 
 [alias]
-	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
-	lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --branches --remotes --tags --
-
-	graph = log --color --graph --pretty=format:'%s' --abbrev-commit --branches=* --
-
-	tarball = !name="$(basename $(git rev-parse --show-toplevel))" && head=$(git log -1 --format="%h" HEAD) && dstamp=$(git log -1 --format="%ci" HEAD | awk '{print $1}') && filename="${name}-${dstamp}-${head}" && git archive --format=tar.gz --prefix="${filename}/" HEAD -o ${filename}.tar.gz
-
-	# Show number of commits made by users
-    contrib = !"f() { printf '%7s %-30s %s\n' COMMITS NAME EMAIL &&  git log --branches --pretty=format:'%<(30)%aN %aE' HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done)| sort | uniq -c | sort -nr; }; f"
-
-	# Show number of lines in the current revision contributed by all users
-	lcontrib = "!f() { for file in $(git ls-tree --name-only -r HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done)); do git blame -w --line-porcelain $file | sed -n '/^[0-9a-f]\\{40\\}/,/^filename / { /^author /h; /^filename /{n;/^\\s*\\(\\#.*\\)\\?$/!{x;s/^author //p} } }'; done | sort | uniq -c | sort -nr; }; f"
-
-    cwd = !echo ${GIT_PREFIX:-./}
-
-	# This generates the same statistics that github's contributors page does:
-	# commits, insertions, & deletions, counted over the current branch.
-    ghstats = "!f() { printf \"%-9s%-9s%-9s%s\\n\" COMMITS INSERTED DELETED AUTHOR; git log --use-mailmap --shortstat  HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done) | perl -e 'while (<>) { if (/^Author: (.*)$/) { $a = $1; $c{$a} = 0 unless defined $c{$a}; $i{$a}=0 unless defined $i{$a}; $d{$a}=0 unless defined $d{$a}; } if (/^ (\\d+) files? changed(?:, (\\d+) insertions?\\(\\+\\))?(?:, (\\d+) deletions?\\(\\-\\))?/) { $c{$a} += 1; $i{$a} += $2; $d{$a} += $3; } }; printf(\"%-9d%-9d%-9d%s\\n\", $c{$_}, $i{$_}, $d{$_}, $_) for (keys %i);' | sort -nr; }; f"
-
-    # purge merged branches.
-	bpurge = "!git branch --merged | egrep -v '^\\*|master|develop|release' | xargs -n 1 git branch -d"
-	bpurge-force = "!git branch --merged | egrep -v '^\\*|master|develop|release' | xargs -n 1 git branch -D"
-
+	#
+	# Basic command aliases
+	#
     st = status
     ci = commit
     co = checkout
     br = branch
     unadd = reset HEAD
+
+	#
+	# Fancy logging: shows DAG in ascii with color alongside commits.
+	#
+	# - lg:  Fancy log for current branch.
+	# - lga: Fancy log for all branches.
+	#
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
+	lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --branches --remotes --tags --
+
+	#
+	# Make tarball out of the current head.  Tarball and the contained
+	# directory will be named by the date and current HEAD's SHA.
+	#
+	tarball = !name="$(basename $(git rev-parse --show-toplevel))" && head=$(git log -1 --format="%h" HEAD) && dstamp=$(git log -1 --format="%ci" HEAD | awk '{print $1}') && filename="${name}-${dstamp}-${head}" && git archive --format=tar.gz --prefix="${filename}/" HEAD -o ${filename}.tar.gz
+
+	#
+	# These will purge branches that have already been merged.
+	#
+	# - bpurge:       uses git branch -d
+	# - bpurge-force: uses git branch -D
+	#
+	bpurge = "!git branch --merged | egrep -v '^\\*|master|develop|release' | xargs -n 1 git branch -d"
+	bpurge-force = "!git branch --merged | egrep -v '^\\*|master|develop|release' | xargs -n 1 git branch -D"
+
+	#
+	# Git Statistics
+	#
+	# - ghstats
+	#     Show same statistics that GitHub's contributors page does:
+	#     commits, insertions, & deletions, over the current branch.
+	#
+	# - lcontrib:
+	#     Use `git blame` to sum up lines contributed by all users
+	#     that are still in the current HEAD. This differs from
+	#     ghstats becausae it shows only lines in the current
+	#     snapshot, NOT insertions and deletions from all commits.
+	#
+	# - contrib:
+	#     Show raw #commits made by users in current branch.
+	#
+	# All of the above aliases can take paths as arguments, e.g., if
+	# your repo has a subdirectory called "lib", you could do:
+	#
+	#   git ghstats lib
+	#
+	# You can provide relative or absolute paths. You can also exclude
+	# paths from the statistics using git pathspecs, e.g. if you
+	# wanted to exclude contributions made in a directory containing
+	# external dependencies:
+	#
+	#   # In the repository root
+	#   git ghstats . ":(exclude)lib/external"
+	#
+	# NOTE: You cannot currently use relative paths with exclude.
+	#       ONLY do this one in the repository root.
+	#
+	contrib = !"f() { printf '%7s %-30s %s\n' COMMITS NAME EMAIL &&  git log --branches --pretty=format:'%<(30)%aN %aE' HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done)| sort | uniq -c | sort -nr; }; f"
+	lcontrib = "!f() { for file in $(git ls-tree --name-only -r HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done)); do git blame -w --line-porcelain $file | sed -n '/^[0-9a-f]\\{40\\}/,/^filename / { /^author /h; /^filename /{n;/^\\s*\\(\\#.*\\)\\?$/!{x;s/^author //p} } }'; done | sort | uniq -c | sort -nr; }; f"
+	ghstats = "!f() { printf \"%-9s%-9s%-9s%s\\n\" COMMITS INSERTED DELETED AUTHOR; git log --use-mailmap --shortstat  HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done) | perl -e 'while (<>) { if (/^Author: (.*)$/) { $a = $1; $c{$a} = 0 unless defined $c{$a}; $i{$a}=0 unless defined $i{$a}; $d{$a}=0 unless defined $d{$a}; } if (/^ (\\d+) files? changed(?:, (\\d+) insertions?\\(\\+\\))?(?:, (\\d+) deletions?\\(\\-\\))?/) { $c{$a} += 1; $i{$a} += $2; $d{$a} += $3; } }; printf(\"%-9d%-9d%-9d%s\\n\", $c{$_}, $i{$_}, $d{$_}, $_) for (keys %i);' | sort -nr; }; f"
 
 [push]
 	default = simple
