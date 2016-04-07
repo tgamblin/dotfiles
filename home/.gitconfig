@@ -10,6 +10,12 @@
 
 [core]
 	excludesfile = /Users/gamblin2/.gitignore_global
+    pager = less -R
+
+[pager]
+    # Preserve color and don't wrap lines in my fancy git logs (see below)
+    lg = less -RS
+    lga = less -RS
 
 [alias]
 	#
