@@ -129,8 +129,8 @@ export HISTSIZE=10000
 # Emacs setup (see below for TextMate extras)
 # This sets up emacs in server mode.
 #
-export EDITOR='emacsclient -t -nw'   # Set up emacs as a server
-#export EDITOR="emacs -nw"           # Set up emacs without server.
+#export EDITOR='emacsclient -t -nw'   # Set up emacs as a server
+export EDITOR="emacs -nw"           # Set up emacs without server.
 
 # Various emacs aliases.
 export ALTERNATE_EDITOR=""
@@ -149,6 +149,7 @@ if [ "$OS" = 'Darwin' ]; then
 
     # put GNU coreutils in path ahead of BSD tools
     pathadd $MACPORTS_HOME/libexec/gnubin
+    pathadd /usr/local/opt/coreutils/libexec/gnubin
 fi
 
 # Get ls set up with some decent colors.
