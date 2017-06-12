@@ -6,10 +6,6 @@ pathadd $HOME/bin/eor-request
 # Autotools
 pathadd $HOME/opt/autotools/$SYS_TYPE/bin
 
-# Boxfish
-pathadd $HOME/src/boxfish/bin
-pathadd PYTHONPATH $HOME/src/boxfish
-
 # bib2xhtml
 #pathadd $HOME/opt/bib2xhtml-2.35
 pathadd /Users/gamblin2/src/spack/opt/macosx_10.9_x86_64/gcc@4.8.1/bib2xhtml@3.0-15-gf506/bin
@@ -43,3 +39,6 @@ pathadd $HOME/src/hashdist/bin
 
 # libmsr
 pathadd $HOME/src/libmsr/$SYS_TYPE/cmd
+
+# brew
+pathadd /usr/local/bin

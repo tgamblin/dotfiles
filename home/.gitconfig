@@ -17,6 +17,12 @@
     lg = less -RS
     lga = less -RS
 
+[pager]
+	# Preserve color and don't wrap lines in my fancy git logs (see below)
+	lg = less -RS
+	lga = less -RS
+    status = less -RS
+
 [alias]
 	#
 	# Basic command aliases
@@ -33,8 +39,10 @@
 	# - lg:  Fancy log for current branch.
 	# - lga: Fancy log for all branches.
 	#
-	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
-	lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --branches --remotes --tags --
+	lg = log --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --
+	lgm = log --first-parent  --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --
+	lgb = log --first-parent  --oneline --color --graph --pretty=format:'%s' --abbrev-commit --
+	lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --branches --remotes --tags --
 
 	#
 	# Make tarball out of the current head.  Tarball and the contained
@@ -85,7 +93,8 @@
 	#
 	contrib = !"f() { printf '%7s %-30s %s\n' COMMITS NAME EMAIL &&  git log --branches --pretty=format:'%<(30)%aN %aE' HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done)| sort | uniq -c | sort -nr; }; f"
 	lcontrib = "!f() { for file in $(git ls-tree --name-only -r HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done)); do git blame -w --line-porcelain $file | perl -ne 'if (/^[0-9a-f]{40} / .. /^filename /) { $author = $_ if (s/^author //); } else { print $author unless /^\\s*(\\#.*)?$/; }'; done | sort | uniq -c | sort -nr; }; f"
-	ghstats = "!f() { printf \"%-8s%-9s%-9s%-9s%s\\n\" '#' COMMITS INSERTED DELETED AUTHOR; git log --use-mailmap --shortstat  HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done) | perl -e 'while (<>) { if (/^Author: (.*)$/) { $a = $1; $c{$a} = 0 unless defined $c{$a}; $i{$a}=0 unless defined $i{$a}; $d{$a}=0 unless defined $d{$a}; } if (/^ (\\d+) files? changed(?:, (\\d+) insertions?\\(\\+\\))?(?:, (\\d+) deletions?\\(\\-\\))?/) { $c{$a} += 1; $i{$a} += $2; $d{$a} += $3; } }; printf(\"%-9d%-9d%-9d%s\\n\", $c{$_}, $i{$_}, $d{$_}, $_) for (keys %i);' | sort -nr | nl -n ln -w 5; }; f"
+	ghstats = "!f() { printf \"%-8s%-9s%-9s%-9s%s\\n\" '#' COMMITS INSERTED DELETED AUTHOR; git log --use-mailmap --shortstat HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done) | perl -e 'while (<>) { if (/^Author: (.*)$/) { $a = $1; $c{$a} = 0 unless defined $c{$a}; $i{$a}=0 unless defined $i{$a}; $d{$a}=0 unless defined $d{$a}; } if (/^ (\\d+) files? changed(?:, (\\d+) insertions?\\(\\+\\))?(?:, (\\d+) deletions?\\(\\-\\))?/) { $c{$a} += 1; $i{$a} += $2; $d{$a} += $3; } }; printf(\"%-9d%-9d%-9d%s\\n\", $c{$_}, $i{$_}, $d{$_}, $_) for (keys %i);' | sort -nr | nl -n ln -w 5; }; f"
+    closed = "!for br in $(git branch); do if git is-merged $br &>/dev/null; then echo $br; fi; done"
 
 [push]
 	default = simple
@@ -105,4 +114,11 @@
 	trustExitCode = true
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
+	path = 
+
+[rerere]
+	enabled = true
+[rebase]
+	instructionFormat = (%an <%ae>) %s
+[commit]
+	template = /Users/gamblin2/.stCommitMsg
