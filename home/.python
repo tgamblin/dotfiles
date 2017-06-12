@@ -26,7 +26,11 @@ if os.path.exists(historyPath):
 # Completer that does not complete if there's only a tab on the line.
 class complete_wrapper:
     def __init__(self, completer):
-        self._wrappee = completer.im_self
+        try:
+            self._wrappee = completer.im_self
+        except AttributeError:
+            self._wrappee = completer.__self__
+
         self._end_colon = re.compile(":\s*$")
         self._start_space = re.compile("(\s*).*:\s*$")
 
@@ -63,7 +67,7 @@ if os.path.exists(python_d):
     def pyfile(file):
         return file.endswith(".py") and not file.startswith("~")
     for file in filter(pyfile, os.listdir(python_d)):
-        execfile(os.path.join(python_d, file))
+        exec(open(os.path.join(python_d, file)).read())
 
 atexit.register(save_history)
 del os, atexit, readline, rlcompleter, re, \

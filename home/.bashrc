@@ -16,7 +16,8 @@ function pathadd {
     # Do the actual prepending here.
     eval "_pa_oldvalue=\$${_pa_varname}"
 
-    if [ -d "$_pa_new_path" ] && [[ ":$_pa_oldvalue:" != *":$_pa_new_path:"* ]]; then
+    if [ -d "$_pa_new_path" ] && [[ ":$_pa_oldvalue:" != *":$_pa_new_path:"* ]];
+    then
         # convert path to absolute path if it is not one
         _pa_new_path=$(cd $_pa_new_path && pwd)
 
@@ -45,6 +46,16 @@ source_if_exists /etc/lc.bashrc
 source_if_exists /etc/bashrc
 source_if_exists /usr/local/tools/dotkit/init.sh
 
+#
+# Use spack coreutils.
+#
+# pathadd ~/src/homebrew/opt/coreutils/libexec/gnubin
+spack_root=~/src/spack/opt/spack/darwin-elcapitan-x86_64/clang*
+pathadd $spack_root/coreutils-*/bin
+#pathadd $spack_root/python-2.7*/bin
+
+#pathadd ~/src/spack/opt/spack/darwin-elcapitan-x86_64/gcc-4.9.3/python-2.7*/bin
+
 # Determine the OS
 OS=$(uname -s)
 
@@ -59,7 +70,8 @@ if $interactive; then
     # Pick a good terminal for the machine we're on
     case $OS in
         'Linux'|'Darwin')
-            if [ -e /usr/share/terminfo/*/xterm-256color ]; then
+            termfile=/usr/share/terminfo/*/xterm*256color
+            if [ -n "$termfile"  ]; then
                 TERM='xterm-256color'
                 export CLICOLOR="YES"
             else
@@ -129,8 +141,8 @@ export HISTSIZE=10000
 # Emacs setup (see below for TextMate extras)
 # This sets up emacs in server mode.
 #
-export EDITOR='emacsclient -t -nw'   # Set up emacs as a server
-#export EDITOR="emacs -nw"           # Set up emacs without server.
+#export EDITOR='emacsclient -t -nw'   # Set up emacs as a server
+export EDITOR="emacs -nw"           # Set up emacs without server.
 
 # Various emacs aliases.
 export ALTERNATE_EDITOR=""
@@ -142,13 +154,16 @@ alias e="$EDITOR"
 # Macports setup is only done on Darwin.
 if [ "$OS" = 'Darwin' ]; then
     #export MACPORTS_HOME=/opt/local
-    export MACPORTS_HOME=$HOME/macports
-    if [ -f $MACPORTS_HOME/share/macports/setupenv.bash ]; then
-        . $MACPORTS_HOME/share/macports/setupenv.bash
-    fi
+    #export MACPORTS_HOME=$HOME/macports
+    #if [ -f $MACPORTS_HOME/share/macports/setupenv.bash ]; then
+    #    . $MACPORTS_HOME/share/macports/setupenv.bash
+    #fi
 
     # put GNU coreutils in path ahead of BSD tools
-    pathadd $MACPORTS_HOME/libexec/gnubin
+    #pathadd $MACPORTS_HOME/libexec/gnubin
+
+    # alias skim to open Skim PDF viewer
+    alias skim='open -a Skim'
 fi
 
 # Get ls set up with some decent colors.
@@ -199,6 +214,7 @@ if [ "$extra_scripts" != "$HOME/.bash.d/\*" ]; then
 fi
 
 pathadd /usr/sbin
+export PATH=/usr/local/bin:$PATH
 pathadd $HOME/bin
 pathadd .
 

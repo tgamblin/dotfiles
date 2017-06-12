@@ -1,4 +1,4 @@
-1;2c;; ===========================================================================
+;; ===========================================================================
 ;; General Options
 ;; ===========================================================================
 ; No info screen at startup.
@@ -15,7 +15,18 @@
 (put 'upcase-region 'disabled nil)       ; enable upcase-region
 
 ; If two files have the same name, name by enclosing-folder/filename
-(toggle-uniquify-buffer-names)
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'forward
+      uniquify-separator ":")
+
+; default filll width
+(setq-default fill-column 73)
+
+; whitespace settings
+(require 'whitespace)
+(setq whitespace-style '(face empty tabs lines-tail trailing))
+(setq whitespace-line-column 79)
+(global-whitespace-mode t)
 
 ; Filename completion ignores case on Mac OS X
 (set 'read-file-name-completion-ignore-case nil)
@@ -44,6 +55,21 @@
   (interactive)
   (save-window-excursion
     (recompile)))
+
+;; ===========================================================================
+;; Packaging.
+;; ===========================================================================
+;(require 'package)
+;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+;(when (< emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+;  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+;(package-initialize)
+
+;; neotree package setup
+;(require 'neotree)
+;(global-set-key [f8] 'neotree-toggle)
+;(setq neo-smart-open t)
 
 ;; ===========================================================================
 ;; Keyboard bindings
@@ -87,11 +113,11 @@
 ;; Use this when not using color-theme.el
 ;; ---------------------------------------------------------------------------
 ; (set-background-color "black")   (set-foreground-color "white")
-; (set-background-color "white")   (set-foreground-color "black")
+(set-background-color "white")   (set-foreground-color "black")
 
 ; fix emacs 22.1.1 not coloring comments (if not using color-theme)
-; (set-face-foreground 'font-lock-comment-face "red")
-; (set-face-foreground 'font-lock-comment-delimiter-face "red")
+;(set-face-foreground 'font-lock-comment-face "red")
+;(set-face-foreground 'font-lock-comment-delimiter-face "red")
 
 
 ;; ===========================================================================
@@ -192,6 +218,12 @@
 ; Markdown mode
 (autoload 'markdown-mode "markdown-mode")
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(defun my-markdown-mode-hook ()
+  ; override markdown binding.
+  (local-set-key [?\M-p] 'fill-paragraph))
+(add-hook 'markdown-mode-hook 'my-markdown-mode-hook)
+
+
 
 ; Graphviz dot mode
 (autoload 'graphviz-dot-mode "graphviz-dot-mode")
@@ -200,6 +232,10 @@
 ; ARES input decks.
 (autoload 'ares-mode "ares-mode")
 (add-to-list 'auto-mode-alist '("\\.ares\\'" . ares-mode))
+
+; Prolog
+(autoload 'prolog-mode "prolog-mode")
+(add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
 
 ;; ===========================================================================
 ;; Nice line numbering (see ~/.elisp/linums.el)
