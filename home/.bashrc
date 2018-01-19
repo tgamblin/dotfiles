@@ -50,7 +50,7 @@ source_if_exists /usr/local/tools/dotkit/init.sh
 # Use spack coreutils.
 #
 # pathadd ~/src/homebrew/opt/coreutils/libexec/gnubin
-spack_root=~/src/spack/opt/spack/darwin-elcapitan-x86_64/clang*
+spack_root=~/src/spack/opt/spack/darwin-sierra-x86_64/clang*
 pathadd $spack_root/coreutils-*/bin
 #pathadd $spack_root/python-2.7*/bin
 
@@ -150,6 +150,9 @@ alias estop="emacsclient -e '(client-save-kill-emacs)'"
 alias emacs="$EDITOR"
 alias em="$EDITOR"
 alias e="$EDITOR"
+
+# docker stuff
+alias d=docker
 
 # Macports setup is only done on Darwin.
 if [ "$OS" = 'Darwin' ]; then
