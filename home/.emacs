@@ -57,6 +57,17 @@
     (recompile)))
 
 ;; ===========================================================================
+;; XML tidy
+;; ===========================================================================
+(require 'sgml-mode)
+
+(defun reformat-xml ()
+  (interactive)
+  (save-excursion
+    (sgml-pretty-print (point-min) (point-max))
+    (indent-region (point-min) (point-max))))
+
+;; ===========================================================================
 ;; Packaging.
 ;; ===========================================================================
 ;(require 'package)
@@ -112,8 +123,8 @@
 
 ;; Use this when not using color-theme.el
 ;; ---------------------------------------------------------------------------
-; (set-background-color "black")   (set-foreground-color "white")
-(set-background-color "white")   (set-foreground-color "black")
+(set-background-color "black")   (set-foreground-color "white")
+; (set-background-color "white")   (set-foreground-color "black")
 
 ; fix emacs 22.1.1 not coloring comments (if not using color-theme)
 ;(set-face-foreground 'font-lock-comment-face "red")
@@ -137,6 +148,9 @@
 ;; ===========================================================================
 ;; Modes and suffixes
 ;; ===========================================================================
+(autoload 'dockerfile-mode "dockerfile-mode")
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+
 (autoload 'css-mode "css-mode")
 (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . css-mode))
