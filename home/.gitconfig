@@ -1,124 +1,195 @@
 [user]
-	name = Todd Gamblin
-	email = tgamblin@llnl.gov
+    name = Todd Gamblin
+    email = tgamblin@llnl.gov
 
 [merge]
-	tool = opendiff
+    tool = opendiff
 
 [color]
-	ui = auto
+    ui = auto
 
 [core]
-	excludesfile = /Users/gamblin2/.gitignore_global
+    excludesfile = /Users/gamblin2/.gitignore_global
     pager = less -R
 
 [pager]
     # Preserve color and don't wrap lines in my fancy git logs (see below)
     lg = less -RS
     lga = less -RS
-
-[pager]
-	# Preserve color and don't wrap lines in my fancy git logs (see below)
-	lg = less -RS
-	lga = less -RS
     status = less -RS
 
 [alias]
-	#
-	# Basic command aliases
-	#
+    #
+    # Basic command aliases
+    #
     st = status
     ci = commit
     co = checkout
     br = branch
     unadd = reset HEAD
+    gr = !git grep
 
-	#
-	# Fancy logging: shows DAG in ascii with color alongside commits.
-	#
-	# - lg:  Fancy log for current branch.
-	# - lga: Fancy log for all branches.
-	#
-	lg = log --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --
-	lgm = log --first-parent  --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --
-	lgb = log --first-parent  --oneline --color --graph --pretty=format:'%s' --abbrev-commit --
-	lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --branches --remotes --tags --
+    #
+    # Fancy logging: shows DAG in ascii with color alongside commits.
+    #
+    # - lg:  Fancy log for current branch.
+    # - lga: Fancy log for all branches.
+    #
+    lg = log --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --
+    lgm = log --first-parent  --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --
+    lgb = log --first-parent  --oneline --color --graph --pretty=format:'%s' --abbrev-commit --
+    lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --branches --remotes --tags --
 
-	#
-	# Make tarball out of the current head.  Tarball and the contained
-	# directory will be named by the date and current HEAD's SHA.
-	#
-	tarball = !name="$(basename $(git rev-parse --show-toplevel))" && head=$(git log -1 --format="%h" HEAD) && dstamp=$(git log -1 --format="%ci" HEAD | awk '{print $1}') && filename="${name}-${dstamp}-${head}" && git archive --format=tar.gz --prefix="${filename}/" HEAD -o ${filename}.tar.gz
+    #
+    # Make tarball out of the current head.  Tarball and the contained
+    # directory will be named by the date and current HEAD's SHA.
+    #
+    tarball = !"f() { \
+        filename=\"$1\"; \
+        if [ \"x$filename\" = x ]; then \
+            name=\"$(basename $(git rev-parse --show-toplevel))\" && \
+            head=$(git log -1 --format=\"%h\" HEAD) && \
+            dstamp=$(git log -1 --format=\"%ci\" HEAD | awk '{print $1}') && \
+            filename=\"${name}-${dstamp}-${head}\"; \
+        fi; \
+        git archive --format=tar.gz --prefix=\"${filename}/\" HEAD -o ${filename}.tar.gz; \
+    }; f"
 
-	#
-	# These will purge branches that have already been merged.
-	#
-	# - bpurge:       uses git branch -d
-	# - bpurge-force: uses git branch -D
-	#
-	bpurge = "!git branch --merged | egrep -v '^\\*|master|develop|release' | xargs -n 1 git branch -d"
-	bpurge-force = "!git branch --merged | egrep -v '^\\*|master|develop|release' | xargs -n 1 git branch -D"
+    #
+    # These will purge branches that have already been merged.
+    #
+    # - bpurge:       uses git branch -d
+    # - bpurge-force: uses git branch -D
+    #
+    bpurge = "!git branch --merged | \
+               grep -v '^\\*|master|develop|release' | \
+               xargs -n 1 git branch -d"
+    bpurge-force = "!git branch --merged | \
+                     egrep -v '^\\*|master|develop|release' | \
+                     xargs -n 1 git branch -D"
 
-	#
-	# Git Statistics
-	#
-	# - ghstats
-	#     Show same statistics that GitHub's contributors page does:
-	#     commits, insertions, & deletions, over the current branch.
-	#
-	# - lcontrib:
-	#     Use `git blame` to sum up lines contributed by all users
-	#     that are still in the current HEAD. This differs from
-	#     ghstats becausae it shows only lines in the current
-	#     snapshot, NOT insertions and deletions from all commits.
-	#
-	# - contrib:
-	#     Show raw #commits made by users in current branch.
-	#
-	# All of the above aliases can take paths as arguments, e.g., if
-	# your repo has a subdirectory called "lib", you could do:
-	#
-	#   git ghstats lib
-	#
-	# You can provide relative or absolute paths. You can also exclude
-	# paths from the statistics using git pathspecs, e.g. if you
-	# wanted to exclude contributions made in a directory containing
-	# external dependencies:
-	#
-	#   # In the repository root
-	#   git ghstats . ":(exclude)lib/external"
-	#
-	# NOTE: You cannot currently use relative paths with exclude.
-	#       ONLY do this one in the repository root.
-	#
-	contrib = !"f() { printf '%7s %-30s %s\n' COMMITS NAME EMAIL &&  git log --branches --pretty=format:'%<(30)%aN %aE' HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done)| sort | uniq -c | sort -nr; }; f"
-	lcontrib = "!f() { for file in $(git ls-tree --name-only -r HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done)); do git blame -w --line-porcelain $file | perl -ne 'if (/^[0-9a-f]{40} / .. /^filename /) { $author = $_ if (s/^author //); } else { print $author unless /^\\s*(\\#.*)?$/; }'; done | sort | uniq -c | sort -nr; }; f"
-	ghstats = "!f() { printf \"%-8s%-9s%-9s%-9s%s\\n\" '#' COMMITS INSERTED DELETED AUTHOR; git log --use-mailmap --shortstat HEAD -- $(for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done) | perl -e 'while (<>) { if (/^Author: (.*)$/) { $a = $1; $c{$a} = 0 unless defined $c{$a}; $i{$a}=0 unless defined $i{$a}; $d{$a}=0 unless defined $d{$a}; } if (/^ (\\d+) files? changed(?:, (\\d+) insertions?\\(\\+\\))?(?:, (\\d+) deletions?\\(\\-\\))?/) { $c{$a} += 1; $i{$a} += $2; $d{$a} += $3; } }; printf(\"%-9d%-9d%-9d%s\\n\", $c{$_}, $i{$_}, $d{$_}, $_) for (keys %i);' | sort -nr | nl -n ln -w 5; }; f"
+    #
+    # Git Statistics
+    #
+    # - ghstats
+    #     Show same statistics that GitHub's contributors page does:
+    #     commits, insertions, & deletions, over the current branch.
+    #
+    # - lcontrib:
+    #     Use `git blame` to sum up lines contributed by all users
+    #     that are still in the current HEAD. This differs from
+    #     ghstats becausae it shows only lines in the current
+    #     snapshot, NOT insertions and deletions from all commits.
+    #
+    # - contrib:
+    #     Show raw #commits made by users in current branch.
+    #
+    # All of the above aliases can take paths as arguments, e.g., if
+    # your repo has a subdirectory called "lib", you could do:
+    #
+    #   git ghstats lib
+    #
+    # You can provide relative or absolute paths. You can also exclude
+    # paths from the statistics using git pathspecs, e.g. if you
+    # wanted to exclude contributions made in a directory containing
+    # external dependencies:
+    #
+    #   # In the repository root
+    #   git ghstats . ":(exclude)lib/external"
+    #
+    # NOTE: You cannot currently use relative paths with exclude.
+    #       ONLY do this one in the repository root.
+    #
+    contrib = !"f() {\
+        printf '%7s %-30s %s\n' COMMITS NAME EMAIL && \
+        git log --branches --pretty=format:'%<(30)%aN %aE' HEAD -- $( \
+            for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done \
+        )| sort | uniq -c | sort -nr; \
+    }; f"
+
+    lcontrib = "!f() { \
+        for file in $( \
+            git ls-tree --name-only -r HEAD -- $( \
+                for d in \"$@\"; do echo \"${GIT_PREFIX:-${d}}\"; done \
+            ) \
+        ); do \
+            git blame -w --line-porcelain $file | \
+                perl -ne '\
+                    if (/^[0-9a-f]{40} / .. /^filename /) { \
+                        $author = $_ if (s/^author //); \
+                    } else { \
+                        print $author unless /^\\s*(\\#.*)?$/; \
+                    }'; \
+        done | sort | uniq -c | sort -nr; \
+    }; f"
+
+    ghstats = "!f() { \
+        printf \"%-8s%-9s%-9s%-9s%s\\n\" '#' COMMITS INSERTED DELETED AUTHOR; \
+        git log --use-mailmap --shortstat HEAD -- $( \
+            for d in \"$@\"; do \
+                echo \"${GIT_PREFIX:-${d}}\"; \
+            done \
+        ) | perl -e ' \
+            while (<>) { \
+                if (/^Author: (.*)$/) { \
+                    $a = $1; \
+                    $c{$a} = 0 unless defined $c{$a}; \
+                    $i{$a}=0 unless defined $i{$a}; \
+                    $d{$a}=0 unless defined $d{$a}; \
+                } \
+                if (/^ (\\d+) files? changed(?:, (\\d+) insertions?\\(\\+\\))?(?:, (\\d+) deletions?\\(\\-\\))?/) { \
+                    $c{$a} += 1; \
+                    $i{$a} += $2; \
+                    $d{$a} += $3; \
+                } \
+            }; \
+            printf(\"%-9d%-9d%-9d%s\\n\", $c{$_}, $i{$_}, $d{$_}, $_) for (keys %i);' \
+        | sort -nr | nl -n ln -w 5; \
+    }; f"
+
     closed = "!for br in $(git branch); do if git is-merged $br &>/dev/null; then echo $br; fi; done"
 
+    # get the github name of this repository by looking at all the github
+    # remotes and picking the most popular name there.
+    ghname = "!f() {\
+        git remote -v |\
+            perl -ne '\
+                if (s/.*github.com[:\\/]([^\\/]*)\\/([^.\\s]*).*/\\2/) { print; }'|\
+            sort |\
+            uniq |\
+            head -1;\
+        }; f"
+
+
+    # Add a remote for a github fork of this repository in a new org
+    ghadd = "!f() {\
+        name=$(git ghname) && \
+        git remote add $1 git@github.com:$1/$name.git; \
+    }; f"
+
 [push]
-	default = simple
+    default = simple
 
 [credential]
-	helper = cache --timeout=43200
+    helper = cache --timeout=43200
 
 [http]
-	postBuffer = 524288000
+    postBuffer = 524288000
 
 [difftool]
-	prompt = false
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    prompt = false
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 
 [mergetool "sourcetree"]
-	cmd = /Users/gamblin2/Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+    cmd = /Users/gamblin2/Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path =
 
 [rerere]
-	enabled = true
+    enabled = true
 [rebase]
-	instructionFormat = (%an <%ae>) %s
+    instructionFormat = (%an <%ae>) %s
 [commit]
-	template = /Users/gamblin2/.stCommitMsg
+    template = /Users/gamblin2/.stCommitMsg
