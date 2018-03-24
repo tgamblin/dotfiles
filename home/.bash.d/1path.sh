@@ -42,3 +42,6 @@ pathadd $HOME/src/libmsr/$SYS_TYPE/cmd
 
 # brew
 pathadd /usr/local/bin
+
+# jupyterhub
+pathadd /usr/global/tools/lorenz

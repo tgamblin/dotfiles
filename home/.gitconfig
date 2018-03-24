@@ -191,5 +191,3 @@
     enabled = true
 [rebase]
     instructionFormat = (%an <%ae>) %s
-[commit]
-    template = /Users/gamblin2/.stCommitMsg

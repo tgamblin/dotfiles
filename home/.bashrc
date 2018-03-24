@@ -83,9 +83,7 @@ if $interactive; then
     export TERM
 
     # X settings
-    if [ -f ~/.Xdefaults ]; then
-        xrdb ~/.Xdefaults
-    fi
+    [[ -n ${DISPLAY} ]] && [[ -f ~/.Xdefaults ]] && xrdb ~/.Xdefaults
 
     # Use an erase character that emacs understands properly
     stty erase ^?
