@@ -50,7 +50,7 @@ source_if_exists /usr/local/tools/dotkit/init.sh
 # Use spack coreutils.
 #
 # pathadd ~/src/homebrew/opt/coreutils/libexec/gnubin
-spack_root=~/src/spack/opt/spack/darwin-sierra-x86_64/clang*
+spack_root=~/src/spack/opt/spack/darwin-*-x86_64/clang*
 pathadd $spack_root/coreutils-*/bin
 #pathadd $spack_root/python-2.7*/bin
 
@@ -203,6 +203,8 @@ alias more='less'
 alias screen='screen -R -D'
 
 
+export PATH=/usr/local/bin:$PATH
+
 # Init other config files as necessary.  File should be put in ~/.bash.d,
 # and can be disabled by putting a ~ anywhere in the name.
 extra_scripts=$HOME/.bash.d/*
@@ -215,7 +217,7 @@ if [ "$extra_scripts" != "$HOME/.bash.d/\*" ]; then
 fi
 
 pathadd /usr/sbin
-export PATH=/usr/local/bin:$PATH
+
 pathadd $HOME/bin
 pathadd .
 

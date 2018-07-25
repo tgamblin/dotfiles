@@ -25,9 +25,15 @@
     st = status
     ci = commit
     co = checkout
-    br = branch
     unadd = reset HEAD
     gr = !git grep
+
+    #
+    # Branches ordered by commit date (most recent first)
+    #
+    # br = branch
+    br = for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative))%(color:reset)'
+
 
     #
     # Fancy logging: shows DAG in ascii with color alongside commits.
@@ -191,3 +197,4 @@
     enabled = true
 [rebase]
     instructionFormat = (%an <%ae>) %s
+    autosquash = true
