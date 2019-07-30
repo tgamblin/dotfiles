@@ -1,6 +1,7 @@
 [user]
     name = Todd Gamblin
     email = tgamblin@llnl.gov
+	signingkey = EBA2E92CCA0EFD1F480D5C4A66B24B9050FDD0B8
 
 [merge]
     tool = opendiff
@@ -29,7 +30,7 @@
     gr = !git grep
 
     br = branch --sort=-committerdate \
-        --format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative))%(color:reset)'
+        --format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative)) %(color:white)%(upstream:track)%(color:reset)%(color:reset)'
 
     bv = branch --sort=-committerdate \
         --format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative))%(color:reset)%(if)%(upstream)%(then) -> %(color:magenta)%(upstream:short) %(color:white)%(upstream:track)%(color:reset)%(end)'
@@ -58,10 +59,10 @@
     # - lg:  Fancy log for current branch.
     # - lga: Fancy log for all branches.
     #
-    lg = log --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --
-    lgm = log --first-parent  --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --
-    lgb = log --first-parent  --oneline --color --graph --pretty=format:'%s' --abbrev-commit --
-    lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --branches --remotes --tags --
+    lg = log --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%aN <%ae>%Creset' --abbrev-commit
+    lgm = log --first-parent  --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit
+    lgb = log --first-parent  --oneline --color --graph --pretty=format:'%s' --abbrev-commit
+    lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --branches --remotes --tags
 
     #
     # Make tarball out of the current head.  Tarball and the contained
@@ -188,6 +189,7 @@
     ghadd = "!f() {\
         name=$(git ghname) && \
         git remote add $1 git@github.com:$1/$name.git; \
+        git fetch $1; \
     }; f"
 
 [push]
@@ -215,3 +217,9 @@
 [rebase]
     instructionFormat = (%an <%ae>) %s
     autosquash = true
+[commit]
+	gpgsign = true
+[tag]
+	forceSignAnnotated = true
+[gpg]
+	program = gpg
