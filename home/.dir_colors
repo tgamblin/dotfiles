@@ -121,6 +121,7 @@ EXEC 01;32
 .py 00;33
 .rb 00;33
 .yaml 00;33
+.lp 00;33
 
 # Dim object output files with dark gray
 .pyc  00;90
