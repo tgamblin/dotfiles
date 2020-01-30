@@ -24,7 +24,7 @@
 
 ; whitespace settings
 (require 'whitespace)
-(setq whitespace-style '(face empty tabs lines-tail trailing))
+(setq whitespace-style '(face empty  lines-tail trailing))
 (setq whitespace-line-column 79)
 (global-whitespace-mode t)
 
@@ -70,12 +70,12 @@
 ;; ===========================================================================
 ;; Packaging.
 ;; ===========================================================================
-;(require 'package)
-;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-;(when (< emacs-major-version 24)
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(when (< emacs-major-version 24)
   ;; For important compatibility libraries like cl-lib
-;  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-;(package-initialize)
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+(package-initialize)
 
 ;; neotree package setup
 ;(require 'neotree)
@@ -120,6 +120,11 @@
 (require 'color-theme)
 (color-theme-initialize)
 (color-theme-tgamblin)
+
+;; Black support for Python
+;; ---------------------------------------------------------------------------
+(require 'blacken)
+(add-hook 'python-mode-hook 'blacken-mode)
 
 ;; Use this when not using color-theme.el
 ;; ---------------------------------------------------------------------------
@@ -182,7 +187,8 @@
 (add-to-list 'interpreter-mode-alist '("python2.4" . python-mode))
 (add-to-list 'interpreter-mode-alist '("python2.5" . python-mode))
 (add-to-list 'interpreter-mode-alist '("python2.6" . python-mode))
-(add-to-list 'interpreter-mode-alist '("python2.7" . python-mode))
+(add-to-list 'interpreter-mode-alist '("python3" . python-mode))
+(add-to-list 'interpreter-mode-alist '("spack-python" . python-mode))
 (add-to-list 'completion-ignored-extensions ".pyc")
 
 ; view headers and c files in c++ mode
@@ -250,6 +256,12 @@
 ; Prolog
 (autoload 'prolog-mode "prolog-mode")
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
+
+; JSON
+(add-hook 'json-mode-hook
+          (lambda ()
+            (make-local-variable 'js-indent-level)
+            (setq js-indent-level 2)))
 
 ;; ===========================================================================
 ;; Nice line numbering (see ~/.elisp/linums.el)
@@ -325,7 +337,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages (quote (json-mode blacken pasp-mode go-mode ##))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
