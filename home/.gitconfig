@@ -30,10 +30,10 @@
     gr = !git grep
 
     br = branch --sort=-committerdate \
-        --format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative)) %(color:white)%(upstream:track)%(color:reset)%(color:reset)'
+        --format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative)%(if:notequals=Todd Gamblin)%(authorname)%(then), %(color:bold blue)by %(authorname)%(color:reset)%(color:cyan)%(end)) %(color:white)%(upstream:track)%(color:reset)%(color:reset)'
 
     bv = branch --sort=-committerdate \
-        --format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative))%(color:reset)%(if)%(upstream)%(then) -> %(color:magenta)%(upstream:short) %(color:white)%(upstream:track)%(color:reset)%(end)'
+        --format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative)%(if:notequals=Todd Gamblin)%(authorname)%(then), %(color:bold blue)by %(authorname)%(color:reset)%(color:cyan)%(end))%(color:reset)%(if)%(upstream)%(then) -> %(color:magenta)%(upstream:short) %(color:white)%(upstream:track)%(color:reset)%(end)'
 
 
 
