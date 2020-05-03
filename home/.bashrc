@@ -49,9 +49,12 @@ source_if_exists /usr/local/tools/dotkit/init.sh
 #
 # Use spack coreutils.
 #
+default_env=~/src/spack/var/spack/environments/default/.spack-env/view
+pathadd $default_env/bin
+
 # pathadd ~/src/homebrew/opt/coreutils/libexec/gnubin
-spack_root=~/src/spack/opt/spack/darwin-*-x86_64/clang*
-pathadd $spack_root/coreutils-*/bin
+#spack_root=~/src/spack/opt/spack/darwin-mojave-x86_64/clang*
+#pathadd $spack_root/coreutils-*/bin
 #pathadd $spack_root/python-2.7*/bin
 
 #pathadd ~/src/spack/opt/spack/darwin-elcapitan-x86_64/gcc-4.9.3/python-2.7*/bin
@@ -233,3 +236,6 @@ if [ "$Apple_PubSub_Socket_Render" != "" -a "$use_textmate" = "true" ]; then
         export EDITOR="mate -w"
     fi
 fi
+
+# added by travis gem
+# [ -f /Users/gamblin2/.travis/travis.sh ] && source /Users/gamblin2/.travis/travis.sh

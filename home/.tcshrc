@@ -80,7 +80,7 @@ if ( $interactive == true ) then
     set green="%{\033[0;32m%}"
     set ltgreen="%{\033[1;32m%}"
     set ltblue="%{\033[1;34m%}"
-    set reset="%{\033[0m%}"
+    set reset=" %{\033[0m%}"
 
     # Different color prompts for different types of shells.
     set host_color = "$ltblue"

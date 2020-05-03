@@ -11,3 +11,6 @@ pathadd /usr/global/etc/bin
 
 # brew
 pathadd /usr/local/bin
+
+# gettext
+pathadd /usr/local/opt/gettext/bin

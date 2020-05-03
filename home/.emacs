@@ -14,6 +14,9 @@
 (setq-default indent-tabs-mode nil)      ; use spaces instead of tabs
 (put 'upcase-region 'disabled nil)       ; enable upcase-region
 
+; one space at end of sentences
+(setq sentence-end-double-space nil)
+
 ; If two files have the same name, name by enclosing-folder/filename
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward

@@ -217,8 +217,8 @@
 [rebase]
     instructionFormat = (%an <%ae>) %s
     autosquash = true
-[commit]
-	gpgsign = true
+#[commit]
+#	gpgsign = true
 [tag]
 	forceSignAnnotated = true
 [gpg]
