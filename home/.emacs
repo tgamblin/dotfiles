@@ -4,6 +4,9 @@
 ; No info screen at startup.
 (setq inhibit-startup-message t)
 
+; no menu bar
+(menu-bar-mode -1)
+
 ; Where I keep all my elisp files
 (add-to-list 'load-path (expand-file-name "~/.elisp/"))
 
@@ -126,6 +129,7 @@
 
 ;; Black support for Python
 ;; ---------------------------------------------------------------------------
+(setq blacken-only-if-project-is-blackened t)
 (require 'blacken)
 (add-hook 'python-mode-hook 'blacken-mode)
 
@@ -138,6 +142,10 @@
 ;(set-face-foreground 'font-lock-comment-face "red")
 ;(set-face-foreground 'font-lock-comment-delimiter-face "red")
 
+(set-face-foreground 'mode-line "#EEEEEE")
+(set-face-background 'mode-line "#303030")
+(set-face-foreground 'mode-line-inactive "#EEEEEE")
+(set-face-background 'mode-line-inactive "#303030")
 
 ;; ===========================================================================
 ;; Making scripts executable
