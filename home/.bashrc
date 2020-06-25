@@ -80,7 +80,10 @@ if $interactive; then
 
     # use the system's max stack size: prevents crashes on cluster apps
     ulimit -s $(ulimit -Hs)
-    ulimit -c $(ulimit -Hc)
+
+    # enable/disable core dumps
+    # ulimit -c $(ulimit -Hc)
+    ulimit -c 0
 
     # Make bash set LINES and COLUMNS after each command.
     shopt -s checkwinsize
