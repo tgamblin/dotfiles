@@ -11,13 +11,12 @@
 
 [core]
     excludesfile = /Users/gamblin2/.gitignore_global
-    pager = less -R
 
 [pager]
     # Preserve color and don't wrap lines in my fancy git logs (see below)
-    lg = less -RS
-    lga = less -RS
-    status = less -RS
+    lg = less -FXRS
+    lga = less -FXRS
+    status = less -FXRS
 
 [alias]
     #
@@ -33,9 +32,16 @@
         --format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative)%(if:notequals=Todd Gamblin)%(authorname)%(then), %(color:bold blue)by %(authorname)%(color:reset)%(color:cyan)%(end)) %(color:white)%(upstream:track)%(color:reset)%(color:reset)'
 
     bv = branch --sort=-committerdate \
-        --format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative)%(if:notequals=Todd Gamblin)%(authorname)%(then), %(color:bold blue)by %(authorname)%(color:reset)%(color:cyan)%(end))%(color:reset)%(if)%(upstream)%(then) -> %(color:magenta)%(upstream:short) %(color:white)%(upstream:track)%(color:reset)%(end)'
+	--format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative)%(if:notequals=Todd Gamblin)%(authorname)%(then), %(color:bold blue)by %(authorname)%(color:reset)%(color:cyan)%(end))%(color:reset)%(if)%(upstream)%(then) -> %(color:magenta)%(upstream:short) %(color:white)%(upstream:track)%(color:reset)%(end)'
 
-
+    wip = commit -a -m WIP
+    unwip = !"f() { \
+      if [ $(git log -1 --format='%s') = WIP ]; then \
+        git reset HEAD^; \
+      else \
+        echo 'error:last commit is not WIP'; \
+      fi \
+    }; f"
 
     #
     # `git b` with no arguments shows branches ordered by commit date
