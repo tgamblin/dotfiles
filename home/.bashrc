@@ -46,19 +46,6 @@ source_if_exists /etc/lc.bashrc
 source_if_exists /etc/bashrc
 source_if_exists /usr/local/tools/dotkit/init.sh
 
-#
-# Use spack coreutils.
-#
-default_env=~/src/spack/var/spack/environments/default/.spack-env/view
-pathadd $default_env/bin
-
-# pathadd ~/src/homebrew/opt/coreutils/libexec/gnubin
-#spack_root=~/src/spack/opt/spack/darwin-mojave-x86_64/clang*
-#pathadd $spack_root/coreutils-*/bin
-#pathadd $spack_root/python-2.7*/bin
-
-#pathadd ~/src/spack/opt/spack/darwin-elcapitan-x86_64/gcc-4.9.3/python-2.7*/bin
-
 # Determine the OS
 OS=$(uname -s)
 
@@ -155,6 +142,23 @@ alias e="$EDITOR"
 # docker stuff
 alias d=docker
 
+# Init other config files as necessary.  File should be put in ~/.bash.d,
+# and can be disabled by putting a ~ anywhere in the name.
+extra_scripts=$HOME/.bash.d/*
+if [ "$extra_scripts" != "$HOME/.bash.d/\*" ]; then
+    for script in $extra_scripts; do
+        if [[ "$script" != *"~"*  ]]; then
+            . $script
+        fi
+    done
+fi
+
+#
+# Use default spack environment
+#
+default_env=~/src/spack/var/spack/environments/default/.spack-env/view
+pathadd $default_env/bin
+
 # Macports setup is only done on Darwin.
 if [ "$OS" = 'Darwin' ]; then
     #export MACPORTS_HOME=/opt/local
@@ -205,19 +209,6 @@ alias f='finger'
 alias more='less'
 alias screen='screen -R -D'
 
-
-export PATH=/usr/local/bin:$PATH
-
-# Init other config files as necessary.  File should be put in ~/.bash.d,
-# and can be disabled by putting a ~ anywhere in the name.
-extra_scripts=$HOME/.bash.d/*
-if [ "$extra_scripts" != "$HOME/.bash.d/\*" ]; then
-    for script in $extra_scripts; do
-        if [[ "$script" != *"~"*  ]]; then
-            . $script
-        fi
-    done
-fi
 
 pathadd /usr/sbin
 
