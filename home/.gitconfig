@@ -25,6 +25,11 @@
     st = status
     ci = commit
     co = checkout
+    tp = !"f() { \
+        cd -- ${GIT_PREFIX:-.} && \
+        mkdir -p $(dirname $1) && \
+        git touch $1; \
+    }; f"
     unadd = reset HEAD
     gr = !git grep
 
