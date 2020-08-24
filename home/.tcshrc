@@ -93,6 +93,7 @@ endif
 
 # Default editor is emacs -nw.
 setenv EDITOR "emacs -nw"
+alias e "$EDITOR"
 
 # Macports setup is only done on Darwin.
 if ( "$OS" == 'Darwin' ) then
