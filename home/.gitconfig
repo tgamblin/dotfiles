@@ -1,7 +1,7 @@
 [user]
     name = Todd Gamblin
     email = tgamblin@llnl.gov
-	signingkey = EBA2E92CCA0EFD1F480D5C4A66B24B9050FDD0B8
+        signingkey = EBA2E92CCA0EFD1F480D5C4A66B24B9050FDD0B8
 
 [merge]
     tool = opendiff
@@ -33,12 +33,31 @@
     unadd = reset HEAD
     gr = !git grep
 
+    # show all branches
     br = branch --sort=-committerdate \
         --format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative)%(if:notequals=Todd Gamblin)%(authorname)%(then), %(color:bold blue)by %(authorname)%(color:reset)%(color:cyan)%(end)) %(color:white)%(upstream:track)%(color:reset)%(color:reset)'
 
-    bv = branch --sort=-committerdate \
-	--format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative)%(if:notequals=Todd Gamblin)%(authorname)%(then), %(color:bold blue)by %(authorname)%(color:reset)%(color:cyan)%(end))%(color:reset)%(if)%(upstream)%(then) -> %(color:magenta)%(upstream:short) %(color:white)%(upstream:track)%(color:reset)%(end)'
+    # show tracking branches
+    bt = branch --sort=-committerdate \
+                --format '%(HEAD) %(color:red)%(objectname:short)%(color:reset)  %(if)%(HEAD)%(then)%(color:green)%(refname:short)%(color:reset)%(else)%(refname:short)%(end) - %(color:cyan)(%(committerdate:relative)%(if:notequals=Todd Gamblin)%(authorname)%(then), %(color:bold blue)by %(authorname)%(color:reset)%(color:cyan)%(end))%(color:reset)%(if)%(upstream)%(then) -> %(color:magenta)%(upstream:short) %(color:white)%(upstream:track)%(color:reset)%(end)'
 
+    # remove branches whose remote tracking branch is gone
+    bgone = !"f() { \
+        gone_branches=$(git branch \
+            --sort=-committerdate \
+                --format '%(refname:short) %(upstream:track)' \
+        | grep '\\[gone\\]' \
+        | cut -d' ' -f 1); \
+        for branch in $gone_branches; do \
+            if [ $1 == --dry-run ]; then \
+                        echo git branch -D $branch; \
+                else \
+                        git branch -D $branch; \
+                fi; \
+        done; \
+    }; f"
+
+    # save and revert work on the tip of a branch
     wip = commit -a -m WIP
     unwip = !"f() { \
       if [ $(git log -1 --format='%s') = WIP ]; then \
@@ -229,8 +248,8 @@
     instructionFormat = (%an <%ae>) %s
     autosquash = true
 #[commit]
-#	gpgsign = true
+#       gpgsign = true
 [tag]
-	forceSignAnnotated = true
+        forceSignAnnotated = true
 [gpg]
-	program = gpg
+        program = gpg
