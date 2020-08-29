@@ -73,7 +73,8 @@ if $interactive; then
     export TERM
 
     # X settings
-    [[ -n ${DISPLAY} ]] && [[ -f ~/.Xdefaults ]] && xrdb ~/.Xdefaults
+    # NOTE: reading Xdefaults is very slow (takes 4 seconds if X isn't running)
+    # [[ -n ${DISPLAY} ]] && [[ -f ~/.Xdefaults ]] && xrdb ~/.Xdefaults
 
     # Use an erase character that emacs understands properly
     stty erase ^?
