@@ -268,6 +268,10 @@
 (autoload 'prolog-mode "prolog-mode")
 (add-to-list 'auto-mode-alist '("\\.pl\\'" . prolog-mode))
 
+; ASP mode
+(autoload 'pasp-mode "pasp-mode")
+(add-to-list 'auto-mode-alist '("\\.lp\\'" . pasp-mode))
+
 ; JSON
 (add-hook 'json-mode-hook
           (lambda ()
