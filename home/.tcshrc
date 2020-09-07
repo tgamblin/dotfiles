@@ -64,9 +64,6 @@ if ( $interactive == true ) then
         breaksw
     endsw
 
-    # X settings
-    [ -f ~/.Xdefaults ] && xrdb ~/.Xdefaults
-
     # Use an erase character that emacs understands.
     stty erase '^?'
 
