@@ -117,3 +117,7 @@ alias more='less'
 alias screen='screen -R -D'
 alias d=docker
 alias kc=kubectl
+
+# don't delete whole paths with M-delete -- / is a separator
+autoload -U select-word-style
+select-word-style bash
