@@ -184,6 +184,12 @@ export PS1="${gray}(${host_color}\h${gray}):${cyan}\W${gray}\$${reset} "
 export PROMPT_COMMAND='echo -ne "\033]0;$(hostname -s): ${PWD}\007"'
 
 #------------------------------------------------------------------------
+# Completion
+#------------------------------------------------------------------------
+source_if_exists $HOME/.completion.d/cmake-completion.sh
+source_if_exists $HOME/.completion.d/git-completion.bash
+
+#------------------------------------------------------------------------
 # Other settings
 #------------------------------------------------------------------------
 # Tell apple to shut up about bash being deprecated

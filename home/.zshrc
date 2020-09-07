@@ -95,6 +95,15 @@ precmd() { echo -ne "\033]0;$(hostname -s): ${PWD}\007" }
 export RPROMPT="%F{8}[%D{%F} %D{%L:%M:%S}]%f"
 
 #------------------------------------------------------------------------
+# Completion
+#------------------------------------------------------------------------
+# Load Git completion
+zstyle ':completion:*:*:git:*' script ~/.completion.d/git-completion.bash
+fpath=(~/.completion.d $fpath)
+
+autoload -Uz compinit && compinit
+
+#------------------------------------------------------------------------
 # Other settings
 #------------------------------------------------------------------------
 
