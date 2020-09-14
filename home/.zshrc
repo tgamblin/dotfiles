@@ -121,3 +121,14 @@ alias kc=kubectl
 # don't delete whole paths with M-delete -- / is a separator
 autoload -U select-word-style
 select-word-style bash
+
+#------------------------------------------------------------------------
+# Antigen
+#------------------------------------------------------------------------
+. $HOME/.zsh/antigen.zsh
+
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-autosuggestions
+antigen apply
+
+bindkey '^[[Z' autosuggest-accept
