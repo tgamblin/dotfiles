@@ -88,7 +88,8 @@ elif [ ! -z "$SLURM_JOBID" ]; then
     host_color="green"
 fi
 
-export PS1="%F{8}%B(%b%F{$host_color}%B%m%b%F{8}%B)%b%F{white}:%F{cyan}%1~%F{8}%B>%b%f "
+# use PROMPT instead of PS1, as PS1 interferes with dash
+export PROMPT="%F{8}%B(%b%F{$host_color}%B%m%b%F{8}%B)%b%F{white}:%F{cyan}%1~%F{8}%B>%b%f "
 precmd() { echo -ne "\033]0;$(hostname -s): ${PWD}\007" }
 
 # timestamp on right
