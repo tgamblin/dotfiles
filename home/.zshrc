@@ -131,4 +131,6 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
 antigen apply
 
-bindkey '^[[Z' autosuggest-accept
+bindkey '^[[Z' reverse-menu-complete
+bindkey '^@' autosuggest-accept
+bindkey '^\n' autosuggest-execute
