@@ -10,6 +10,7 @@ pathadd $default_env/bin
 pathadd $HOME/bin
 pathadd $HOME/bin/scripts
 pathadd $HOME/bin/eor-request
+pathadd /usr/local/opt/ruby/bin  # homebrew ruby
 
 #------------------------------------------------------------------------
 # Go
@@ -123,14 +124,25 @@ alias kc=kubectl
 autoload -U select-word-style
 select-word-style bash
 
+# dont' error out when globs match nothing -- pass the unevaluated glob
+setopt nonomatch
+
 #------------------------------------------------------------------------
 # Antigen
 #------------------------------------------------------------------------
 . $HOME/.zsh/antigen.zsh
 
 antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-autocomplete
 antigen bundle zsh-users/zsh-autosuggestions
-antigen apply
+
+# `antigen apply` has concurrency issues, so make it a critical section
+touch ~/.zsh/lock
+while ! ln ~/.zsh/lock ~/.zsh/taken 2> /dev/null; do
+    sleep .001
+done
+antigen apply || echo "`antigen apply` failed"
+rm -f ~/.zsh/taken
 
 bindkey '^[[Z' reverse-menu-complete
 bindkey '^@' autosuggest-accept
