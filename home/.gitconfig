@@ -45,15 +45,15 @@
     bgone = !"f() { \
         gone_branches=$(git branch \
             --sort=-committerdate \
-                --format '%(refname:short) %(upstream:track)' \
+            --format '%(refname:short) %(upstream:track)' \
         | grep '\\[gone\\]' \
         | cut -d' ' -f 1); \
         for branch in $gone_branches; do \
-            if [ $1 == --dry-run ]; then \
-                        echo git branch -D $branch; \
-                else \
-                        git branch -D $branch; \
-                fi; \
+            if [ \"$1\" = --dry-run ]; then \
+                echo git branch -D $branch; \
+            else \
+                git branch -D $branch; \
+            fi; \
         done; \
     }; f"
 
