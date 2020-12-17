@@ -153,7 +153,10 @@ antigen bundle zsh-users/zsh-autocomplete
 antigen bundle zsh-users/zsh-autosuggestions
 
 # `antigen apply` has concurrency issues, so make it a critical section
-touch ~/.zsh/lock
+if [ ! -e ~/.zsh/lock ]; then
+    mkdir -p ~/.zsh
+    touch ~/.zsh/lock
+fi
 while ! ln ~/.zsh/lock ~/.zsh/taken 2> /dev/null; do
     sleep .001
 done
