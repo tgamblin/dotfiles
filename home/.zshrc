@@ -94,7 +94,7 @@ export PROMPT="%F{8}%B(%b%F{$host_color}%B%m%b%F{8}%B)%b%F{white}:%F{cyan}%1~%F{
 precmd() { echo -ne "\033]0;$(hostname -s): ${PWD}\007" }
 
 # timestamp on right
-export RPROMPT="%F{8}[%D{%F} %D{%L:%M:%S}]%f"
+# export RPROMPT="%F{8}[%D{%F} %D{%L:%M:%S}]%f"
 
 #------------------------------------------------------------------------
 # Make key bindings for M-[fb], M-delete, etc. work
@@ -135,6 +135,9 @@ alias more='less'
 alias screen='screen -R -D'
 alias d=docker
 alias kc=kubectl
+
+# make which behave like it does elsewhere
+alias which='whence -p'
 
 # don't delete whole paths with M-delete -- / is a separator
 autoload -U select-word-style
