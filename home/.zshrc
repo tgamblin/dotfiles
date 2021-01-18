@@ -84,6 +84,8 @@ host_color="blue"
 if [ "$USER" = "root" ]; then
     # If we're in a root shell, make the prompt red
     host_color="red"
+elif [[ "$(hostname -s)" == "rz"* ]]; then
+    host_color='magenta'
 elif [ ! -z "$SLURM_JOBID" ]; then
     # If we're in a SLURM salloc, use a green prompt
     host_color="green"
