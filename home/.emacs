@@ -272,6 +272,11 @@
 (autoload 'pasp-mode "pasp-mode")
 (add-to-list 'auto-mode-alist '("\\.lp\\'" . pasp-mode))
 
+; Lua mode
+(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
+(add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
+(add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
+
 ; JSON
 (add-hook 'json-mode-hook
           (lambda ()
