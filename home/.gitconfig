@@ -253,3 +253,7 @@
         forceSignAnnotated = true
 [gpg]
         program = gpg
+[fetch]
+	prune = true
+[pull]
+	ff = only

@@ -1,8 +1,12 @@
 #------------------------------------------------------------------------
 # Spack environment and paths
 #------------------------------------------------------------------------
-time source_if_exists $HOME/src/spack/share/spack/setup-env.sh
+source_if_exists $HOME/src/spack/share/spack/setup-env.sh
 default_env=~/src/spack/var/spack/environments/default/.spack-env/view
+
+if [ -x ${default_env}/bin/python ]; then
+    export SPACK_PYTHON=${default_env}/bin/python
+fi
 
 pathadd /usr/sbin
 pathadd /usr/global/etc/bin     # LC's sbin tools
@@ -140,6 +144,11 @@ alias kc=kubectl
 
 # make which behave like it does elsewhere
 alias which='whence -p'
+
+# zsh time doesn't time shell functions, or behave like anyone wants
+if command -v /usr/bin/time &>/dev/null; then
+    alias time='/usr/bin/time'
+fi
 
 # don't delete whole paths with M-delete -- / is a separator
 autoload -U select-word-style
