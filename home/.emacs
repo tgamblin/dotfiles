@@ -26,12 +26,11 @@
       uniquify-separator ":")
 
 ; default filll width
-(setq-default fill-column 73)
+(setq-default fill-column 79)
 
 ; whitespace settings
 (require 'whitespace)
 (setq whitespace-style '(face empty  lines-tail trailing))
-(setq whitespace-line-column 79)
 (global-whitespace-mode t)
 
 ; Filename completion ignores case on Mac OS X
