@@ -190,6 +190,11 @@ source_if_exists $HOME/.completion.d/cmake-completion.sh
 source_if_exists $HOME/.completion.d/git-completion.bash
 
 #------------------------------------------------------------------------
+# Rust
+#------------------------------------------------------------------------
+source_if_exists "$HOME/.cargo/env"
+
+#------------------------------------------------------------------------
 # Other settings
 #------------------------------------------------------------------------
 # Tell apple to shut up about bash being deprecated
