@@ -175,22 +175,38 @@ setopt EXTENDED_HISTORY    # add timestamp for each entry
 #------------------------------------------------------------------------
 # Antigen
 #------------------------------------------------------------------------
-. $HOME/.zsh/antigen.zsh
+antigen_setup() {
+    . $HOME/.zsh/antigen.zsh
 
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle zsh-users/zsh-autocomplete
-antigen bundle zsh-users/zsh-autosuggestions
+    # `antigen apply` has concurrency issues, so make it a critical section
+    if [ ! -e ~/.zsh/lock ]; then
+        mkdir -p ~/.zsh
+        touch ~/.zsh/lock
+    fi
 
-# `antigen apply` has concurrency issues, so make it a critical section
-if [ ! -e ~/.zsh/lock ]; then
-    mkdir -p ~/.zsh
-    touch ~/.zsh/lock
-fi
-while ! ln ~/.zsh/lock ~/.zsh/taken 2> /dev/null; do
-    sleep .001
-done
-antigen apply || echo "`antigen apply` failed"
-rm -f ~/.zsh/taken
+    count=0
+    ntries=2000
+    while ! ln ~/.zsh/lock ~/.zsh/taken 2> /dev/null; do
+        sleep .001
+
+        count=$(($count+1))
+        if [ "$count" = "$ntries" ]; then
+            echo "Couldn't get antigen lock after $ntries tries."
+            echo "Consider removing ~/.zsh/taken."
+            return
+        fi
+    done
+    # begin critical section
+
+    antigen bundle zsh-users/zsh-syntax-highlighting
+    antigen bundle zsh-users/zsh-autocomplete
+    antigen bundle zsh-users/zsh-autosuggestions
+    antigen apply || echo "`antigen apply` failed"
+
+    # end critical section
+    rm -f ~/.zsh/taken
+}
+antigen_setup
 
 bindkey '^[[Z' reverse-menu-complete
 bindkey '^@' autosuggest-accept
