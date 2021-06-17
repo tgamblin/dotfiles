@@ -145,7 +145,7 @@ export PYTHONSTARTUP=~/.python
 alias more='less'
 alias screen='screen -R -D'
 alias d=docker
-alias kc=kubectl
+alias k=kubectl
 
 # make which behave like it does elsewhere
 alias which='whence -p'
