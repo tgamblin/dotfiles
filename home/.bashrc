@@ -94,16 +94,6 @@ alias estop="emacsclient -e '(client-save-kill-emacs)'"
 alias emacs="$EDITOR"
 alias e="$EDITOR"
 
-# Use TextMate if we're in a GUI session and it exists, otherwise emacs.
-# Do editor setup after path setup as it depends on the PATH
-use_textmate=false
-if [ "$Apple_PubSub_Socket_Render" != "" -a "$use_textmate" = "true" ]; then
-    mate=$(which mate 2>/dev/null)
-    if [ ! -z "$mate" ]; then
-        export EDITOR="mate -w"
-    fi
-fi
-
 #------------------------------------------------------------------------
 # ls options
 #------------------------------------------------------------------------
