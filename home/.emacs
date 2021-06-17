@@ -253,7 +253,9 @@
   (local-set-key [?\M-p] 'fill-paragraph))
 (add-hook 'markdown-mode-hook 'my-markdown-mode-hook)
 
-
+;; rust mode
+(autoload 'rust-mode "rust-mode")
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 
 ; Graphviz dot mode
 (autoload 'graphviz-dot-mode "graphviz-dot-mode")
