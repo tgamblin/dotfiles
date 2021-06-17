@@ -323,3 +323,8 @@ for app in "Dock" "Finder" "Mail" "Safari" "SystemUIServer" "Terminal"; do
     killall "${app}" > /dev/null 2>&1
 done
 echo "Done. Note that some of these changes require a logout/restart to take effect."
+
+###############################################################################
+# Add title bar icons back in Big Sur
+###############################################################################
+defaults write com.apple.finder NSWindowSupportsAutomaticInlineTitle -bool false
