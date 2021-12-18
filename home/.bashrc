@@ -199,4 +199,5 @@ export PYTHONSTARTUP=~/.python
 alias more='less'
 alias screen='screen -R -D'
 alias d=docker
+alias pm=podman
 alias k=kubectl

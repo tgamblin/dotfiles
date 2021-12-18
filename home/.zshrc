@@ -4,6 +4,7 @@
 source_if_exists $HOME/src/spack/share/spack/setup-env.sh
 default_env=~/src/spack/var/spack/environments/default/.spack-env/view
 
+#export SPACK_PYTHON=/usr/bin/python
 if [ -x ${default_env}/bin/python ]; then
     export SPACK_PYTHON=${default_env}/bin/python
 fi
@@ -39,9 +40,9 @@ alias e="$EDITOR"
 # ls options
 #------------------------------------------------------------------------
 # Give ls decent colors and options depending on version
-if ls --color -d . >/dev/null 2>&1; then
+if \ls --color -d . >/dev/null 2>&1; then
     export LS_OPTIONS="--color=auto -F -B"
-elif ls -G -d . >/dev/null 2>&1; then
+elif \ls -G -d . >/dev/null 2>&1; then
     export LS_OPTIONS="-G -F"
 fi
 
@@ -135,7 +136,9 @@ export PYTHONSTARTUP=~/.python
 alias more='less'
 alias screen='screen -R -D'
 alias d=docker
+alias pm=podman
 alias k=kubectl
+alias g=git
 
 # make which behave like it does elsewhere
 alias which='whence -p'
@@ -201,3 +204,6 @@ antigen_setup
 bindkey '^[[Z' reverse-menu-complete
 bindkey '^@' autosuggest-accept
 bindkey '^\n' autosuggest-execute
+
+alias docker-up='eval $(docker-machine env) && docker-machine start'
+alias docker-down='eval $(docker-machine env) && docker-machine stop'

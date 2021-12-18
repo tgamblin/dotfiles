@@ -26,11 +26,12 @@
       uniquify-separator ":")
 
 ; default filll width
-(setq-default fill-column 79)
+(setq-default fill-column 88)
 
 ; whitespace settings
 (require 'whitespace)
 (setq whitespace-style '(face empty  lines-tail trailing))
+(setq whitespace-line-column 99)
 (global-whitespace-mode t)
 
 ; Filename completion ignores case on Mac OS X
@@ -93,6 +94,7 @@
 (global-set-key [?\M-g] 'goto-line)      ; use M-g as shortcut for goto-line
 (global-set-key [?\M-p] 'fill-paragraph) ; use M-p for paragraph fill.
 (global-set-key [?\M-m] 'recompile-quietly)
+;(global-set-key [?\M-^] 'query-replace-regexp)
 
 ;; ===========================================================================
 ;; Color Setup
@@ -217,6 +219,7 @@
 (autoload 'yaml-mode "yaml-mode")
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.cff\\'" . yaml-mode))
 
 ; Web template mode
 (autoload 'web-mode "web-mode")

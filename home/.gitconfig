@@ -17,6 +17,7 @@
     lg = less -FXRS
     lga = less -FXRS
     status = less -FXRS
+    diff = $(dirname $(realpath $(which git)))/../share/git-core/contrib/diff-highlight/diff-highlight | less
 
 [alias]
     #
@@ -222,6 +223,16 @@
         git fetch $1; \
     }; f"
 
+    # Go to the github/gitlab page for this repo
+    go = "!f() {\
+        url=$(git remote -v | grep '^origin\\|^github\\|^gitlab' | \
+            sort -r | \
+            egrep -o 'git..b.com[:/][^/ ]+/[^/ ]+' | head -1 | \
+            perl -pe 's@(git..b\\.com).([^/ \\.]+)/([^/ \\.]+)(.git)?@https://\\1/\\2/\\3@' \
+        ) && \
+        python -c \"import webbrowser; webbrowser.open('${url}')\"; \
+    }; f"
+
 [push]
     default = simple
 
@@ -259,3 +270,5 @@
 	ff = only
 [init]
 	defaultBranch = main
+[diff]
+	tool = opendiff
