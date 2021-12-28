@@ -1,6 +1,7 @@
 #------------------------------------------------------------------------
 # Spack environment and paths
 #------------------------------------------------------------------------
+export SPACK_SKIP_MODULES=1
 source_if_exists $HOME/src/spack/share/spack/setup-env.sh
 default_env=~/src/spack/var/spack/environments/default/.spack-env/view
 
