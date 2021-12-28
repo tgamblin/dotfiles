@@ -208,3 +208,5 @@ bindkey '^\n' autosuggest-execute
 
 alias docker-up='eval $(docker-machine env) && docker-machine start'
 alias docker-down='eval $(docker-machine env) && docker-machine stop'
+
+export GPG_TTY=$(tty)

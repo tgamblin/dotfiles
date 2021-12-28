@@ -1,7 +1,7 @@
 [user]
     name = Todd Gamblin
     email = tgamblin@llnl.gov
-        signingkey = EBA2E92CCA0EFD1F480D5C4A66B24B9050FDD0B8
+    signingkey = C16729F1AACF66C6
 
 [merge]
     tool = opendiff
@@ -258,12 +258,8 @@
 [rebase]
     instructionFormat = (%an <%ae>) %s
     autosquash = true
-#[commit]
-#       gpgsign = true
 [tag]
         forceSignAnnotated = true
-[gpg]
-        program = gpg
 [fetch]
 	prune = true
 [pull]
@@ -272,3 +268,5 @@
 	defaultBranch = main
 [diff]
 	tool = opendiff
+[commit]
+	gpgsign = true
