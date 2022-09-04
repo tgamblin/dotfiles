@@ -173,7 +173,7 @@ Show black output, if black exit abnormally and DISPLAY is t."
         ;; show overlong lines correctly when using whitespace mode
         (if blacken-line-length
             (setq whitespace-line-column blacken-line-length)
-          (setq whitespace-line-column 88)))
+          (setq whitespace-line-column 99)))
     (remove-hook 'before-save-hook 'blacken-buffer t)))
 
 (provide 'blacken)

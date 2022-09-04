@@ -17,7 +17,7 @@
     lg = less -FXRS
     lga = less -FXRS
     status = less -FXRS
-    diff = $(dirname $(realpath $(which git)))/../share/git-core/contrib/diff-highlight/diff-highlight | less
+#    diff = $(dirname $(which git))/../share/git-core/contrib/diff-highlight/diff-highlight | less
 
 [alias]
     #

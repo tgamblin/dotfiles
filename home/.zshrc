@@ -5,6 +5,10 @@ export SPACK_SKIP_MODULES=1
 source_if_exists $HOME/src/spack/share/spack/setup-env.sh
 default_env=~/src/spack/var/spack/environments/default/.spack-env/view
 
+# brew
+eval "$(/opt/homebrew/bin/brew shellenv)"
+pathadd /usr/local/opt/ruby/bin  # homebrew ruby
+
 #export SPACK_PYTHON=/usr/bin/python
 if [ -x ${default_env}/bin/python ]; then
     export SPACK_PYTHON=${default_env}/bin/python
@@ -16,7 +20,9 @@ pathadd $default_env/bin
 pathadd $HOME/bin
 pathadd $HOME/bin/scripts
 pathadd $HOME/bin/eor-request
-pathadd /usr/local/opt/ruby/bin  # homebrew ruby
+
+# texlive
+pathadd /usr/local/texlive/2022/bin/universal-darwin
 
 #------------------------------------------------------------------------
 # Go
@@ -28,12 +34,13 @@ pathadd "${GOPATH}/bin"
 # Editors
 #------------------------------------------------------------------------
 # Emacs setup
-#export EDITOR='emacsclient -t -nw'   # Set up emacs as a server
-export EDITOR="emacs -nw"           # Set up emacs without server.
+export EDITOR="emacsclient -nw -a ''"   # Set up emacs as a server.
+#export EDITOR="emacs -nw"                  # Set up emacs without server.
+
 
 # Various emacs aliases.
 export ALTERNATE_EDITOR=""
-alias estop="emacsclient -e '(client-save-kill-emacs)'"
+alias estop="emacsclient -e '(save-buffers-kill-emacs)'"
 alias emacs="$EDITOR"
 alias e="$EDITOR"
 
