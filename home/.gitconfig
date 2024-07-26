@@ -3,6 +3,9 @@
     email = tgamblin@llnl.gov
     signingkey = C16729F1AACF66C6
 
+[format]
+    signoff = true
+
 [merge]
     tool = opendiff
 
@@ -11,6 +14,8 @@
 
 [core]
     excludesfile = /Users/gamblin2/.gitignore_global
+    fsmonitor = true
+	untrackedcache = true
 
 [pager]
     # Preserve color and don't wrap lines in my fancy git logs (see below)
@@ -33,6 +38,9 @@
     }; f"
     unadd = reset HEAD
     gr = !git grep
+
+    # pull develop
+    pd = fetch github develop:develop
 
     # show all branches
     br = branch --sort=-committerdate \
@@ -209,7 +217,7 @@
     ghname = "!f() {\
         git remote -v |\
             perl -ne '\
-                if (s/.*github.com[:\\/]([^\\/]*)\\/([^.\\s]*).*/\\2/) { print; }'|\
+   	        if (s/.*github.com[:\\/]([^\\/]*)\\/([^\\s]*) \\(push\\)/\\2/) { s/\\.git$//; print; }'|\
             sort |\
             uniq |\
             head -1;\
