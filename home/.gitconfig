@@ -241,6 +241,20 @@
         python -c \"import webbrowser; webbrowser.open('${url}')\"; \
     }; f"
 
+    rebase-gitlab = "!f() { git rebase \"$@\" $(curl -Lfs 'https://gitlab.spack.io/api/v4/projects/2/pipelines?scope=finished&ref=develop&per_page=1' | jq -r 'first.sha'); }; f"	
+
+    # rebase in place
+    rip = "!f() {\
+	base="";\
+	for ref in develop main master; do\
+            base=$(git merge-base $ref HEAD 2>/dev/null) && break;\
+	done;\
+	if [ -z \"$base\" ]; then\
+	    return 1;\
+	fi;\
+	git rebase -i $base;\
+    }; f"
+
 [push]
     default = simple
 
