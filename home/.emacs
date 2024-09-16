@@ -83,6 +83,11 @@
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
 
+(use-package python-black
+  :demand t
+  :after python
+  :hook (python-mode . python-black-on-save-mode-enable-dwim))
+
 ;; neotree package setup
 ;(require 'neotree)
 ;(global-set-key [f8] 'neotree-toggle)
@@ -129,10 +134,11 @@
 (color-theme-tgamblin)
 
 ;; Black support for Python
+;; this is slow for large files -- see python-black above
 ;; ---------------------------------------------------------------------------
-(setq blacken-only-if-project-is-blackened t)
-(require 'blacken)
-(add-hook 'python-mode-hook 'blacken-mode)
+;(setq blacken-only-if-project-is-blackened t)
+;(require 'blacken)
+;(add-hook 'python-mode-hook 'blacken-mode)
 
 ;; Use this when not using color-theme.el
 ;; ---------------------------------------------------------------------------
@@ -361,7 +367,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (json-mode blacken pasp-mode go-mode ##))))
+ '(package-selected-packages '(python-black json-mode blacken pasp-mode go-mode ##)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

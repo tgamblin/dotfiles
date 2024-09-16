@@ -13,15 +13,19 @@ import atexit, os, sys, readline, rlcompleter, re
 
 historyPath = os.path.expanduser("~/.pyhistory")
 
+
 def save_history(historyPath=historyPath):
     import readline
+
     readline.write_history_file(historyPath)
+
 
 if os.path.exists(historyPath):
     try:
         readline.read_history_file(historyPath)
     except IOError as e:
         pass  # Ignore issues with history file versions.
+
 
 # Completer that does not complete if there's only a tab on the line.
 class complete_wrapper:
@@ -31,17 +35,18 @@ class complete_wrapper:
         except AttributeError:
             self._wrappee = completer.__self__
 
-        self._end_colon = re.compile(":\s*$")
-        self._start_space = re.compile("(\s*).*:\s*$")
+        self._end_colon = re.compile(r":\s*$")
+        self._start_space = re.compile(r"(\s*).*:\s*$")
 
-    def complete(self,text,state):
+    def complete(self, text, state):
         if text:
-            return self._wrappee.complete(text,state)
+            return self._wrappee.complete(text, state)
         else:
-            if state == 0:       # return three spaces b/c 4th is automatic.
+            if state == 0:  # return three spaces b/c 4th is automatic.
                 return "   "
-            else:                # return None on state 1 b/c just one completion
+            else:  # return None on state 1 b/c just one completion
                 return None
+
 
 cw = complete_wrapper(readline.get_completer())
 readline.set_completer(cw.complete)
@@ -54,5 +59,14 @@ else:
     readline.parse_and_bind("tab: complete")
 
 atexit.register(save_history)
-del os, atexit, readline, rlcompleter, re, \
-    save_history, historyPath, complete_wrapper, cw
+del (
+    os,
+    atexit,
+    readline,
+    rlcompleter,
+    re,
+    save_history,
+    historyPath,
+    complete_wrapper,
+    cw,
+)

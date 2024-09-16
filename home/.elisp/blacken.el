@@ -122,7 +122,7 @@ Return black process the exit code."
      (list "--pyi"))
    '("-")))
 
-(defun blacken-project-is-blackened (&optional display)
+(defun blacken-project-is-blackened (&optional display) 
   "Whether the project has a pyproject.toml with [tool.black] in it."
   (when-let ((parent (locate-dominating-file default-directory "pyproject.toml")))
     (with-temp-buffer
