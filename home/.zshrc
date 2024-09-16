@@ -3,11 +3,23 @@
 #------------------------------------------------------------------------
 export SPACK_SKIP_MODULES=1
 source_if_exists $HOME/src/spack/share/spack/setup-env.sh
+
+#autoload -Uz +X bashcompinit && bashcompinit
+source_if_exists $HOME/src/spack/share/spack/spack-completion.bash
 default_env=~/src/spack/var/spack/environments/default/.spack-env/view
 
 # brew
 eval "$(/opt/homebrew/bin/brew shellenv)"
 pathadd /usr/local/opt/ruby/bin  # homebrew ruby
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit && compinit
+fi
+
+pathadd /opt/homebrew/opt/ruby/bin
+pathadd /opt/homebrew/lib/ruby/gems/3.3.0/bin
 
 #export SPACK_PYTHON=/usr/bin/python
 if [ -x ${default_env}/bin/python ]; then
@@ -34,14 +46,13 @@ pathadd "${GOPATH}/bin"
 # Editors
 #------------------------------------------------------------------------
 # Emacs setup
-export EDITOR="emacsclient -nw -a ''"   # Set up emacs as a server.
-#export EDITOR="emacs -nw"                  # Set up emacs without server.
+#export EDITOR='exec emacsclient -t -a ""'   # Set up emacs as a server.
+export EDITOR="emacs -nw"                  # Set up emacs without server.
 
 
 # Various emacs aliases.
 export ALTERNATE_EDITOR=""
 alias estop="emacsclient -e '(save-buffers-kill-emacs)'"
-alias emacs="$EDITOR"
 alias e="$EDITOR"
 
 #------------------------------------------------------------------------
@@ -135,18 +146,19 @@ source_if_exists "$HOME/.cargo/env"
 # Other settings
 #------------------------------------------------------------------------
 
-# Make grep highlight search string in red
-export GREP_OPTIONS='--color=auto'
-
 # Python startup file
 export PYTHONSTARTUP=~/.python
 
 alias more='less'
 alias screen='screen -R -D'
 alias d=docker
+alias n=nerdctl
 alias pm=podman
 alias k=kubectl
 alias g=git
+
+# Make grep highlight search string in red
+alias grep='grep --color=auto'
 
 # make which behave like it does elsewhere
 alias which='whence -p'
