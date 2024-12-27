@@ -14,8 +14,8 @@
 
 [core]
     excludesfile = /Users/gamblin2/.gitignore_global
-    fsmonitor = true
-	untrackedcache = true
+    fsmonitor = false
+    untrackedcache = true
 
 [pager]
     # Preserve color and don't wrap lines in my fancy git logs (see below)
@@ -66,6 +66,21 @@
         done; \
     }; f"
 
+    # view branches that have been sucessfully squashed
+    bsquashed = "!f() { \
+        current_branch=$(git rev-parse --abbrev-ref HEAD); \
+        branches=$(git for-each-ref refs/heads/ --format='%(refname:short)'); \
+        for branch in $branches; do \
+            merge_base=$(git merge-base $current_branch $branch); \
+            branch_parsed=$(git rev-parse \"$branch^{tree}\"); \
+            merge_commit=$(git commit-tree $branch_parsed -p $merge_base -m _); \
+            merged_status=$(git cherry $current_branch $merge_commit | cut -c1-1); \
+            if [ \"$merged_status\" = - ]; then \
+                echo $branch; \
+            fi; \
+        done; \
+    }; f"
+
     # save and revert work on the tip of a branch
     wip = commit -a -m WIP
     unwip = !"f() { \
@@ -91,6 +106,14 @@
             fi; \
         }; f"
 
+    # pull develop branch regardless of what's checked out
+    pd = !"f() { \
+	if [ \"$(git rev-parse refs/heads/develop)\" = \"$(git rev-parse HEAD)\" ]; then \
+            git pull; \
+	else \
+            git fetch github develop:develop; \
+	fi; \
+    }; f"
 
     #
     # Fancy logging: shows DAG in ascii with color alongside commits.
@@ -99,6 +122,7 @@
     # - lga: Fancy log for all branches.
     #
     lg = log --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%aN <%ae>%Creset' --abbrev-commit
+    lgc = log --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%cN <%ce>%Creset' --abbrev-commit
     lgm = log --first-parent  --oneline --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit
     lgb = log --first-parent  --oneline --color --graph --pretty=format:'%s' --abbrev-commit
     lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit --branches --remotes --tags
@@ -241,7 +265,7 @@
         python -c \"import webbrowser; webbrowser.open('${url}')\"; \
     }; f"
 
-    rebase-gitlab = "!f() { git rebase \"$@\" $(curl -Lfs 'https://gitlab.spack.io/api/v4/projects/2/pipelines?scope=finished&ref=develop&per_page=1' | jq -r 'first.sha'); }; f"	
+    rebase-gitlab = "!f() { git rebase \"$@\" $(curl -Lfs 'https://gitlab.spack.io/api/v4/projects/2/pipelines?scope=finished&ref=develop&per_page=1' | jq -r 'first.sha'); }; f"
 
     # rebase in place
     rip = "!f() {\
@@ -250,6 +274,7 @@
             base=$(git merge-base $ref HEAD 2>/dev/null) && break;\
 	done;\
 	if [ -z \"$base\" ]; then\
+            echo \"couldn't find a merge base\";\
 	    return 1;\
 	fi;\
 	git rebase -i $base;\
