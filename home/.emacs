@@ -4,8 +4,14 @@
 ; No info screen at startup.
 (setq inhibit-startup-message t)
 
+; larger large file threshold
+(setq large-file-warning-threshold 52428800)
+
 ; no menu bar
 (menu-bar-mode -1)
+
+; don't put contents of kill ring in the clipboard
+(setq-default select-enable-clipboard nil)
 
 ; Where I keep all my elisp files
 (add-to-list 'load-path (expand-file-name "~/.elisp/"))
@@ -30,7 +36,7 @@
 
 ; whitespace settings
 (require 'whitespace)
-(setq whitespace-style '(face empty  lines-tail trailing))
+(setq whitespace-style '(face empty lines-tail trailing))
 (setq whitespace-line-column 99)
 (global-whitespace-mode t)
 
@@ -83,11 +89,6 @@
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 (package-initialize)
 
-(use-package python-black
-  :demand t
-  :after python
-  :hook (python-mode . python-black-on-save-mode-enable-dwim))
-
 ;; neotree package setup
 ;(require 'neotree)
 ;(global-set-key [f8] 'neotree-toggle)
@@ -133,12 +134,33 @@
 (color-theme-initialize)
 (color-theme-tgamblin)
 
-;; Black support for Python
-;; this is slow for large files -- see python-black above
+;; ruff-format.el
 ;; ---------------------------------------------------------------------------
-;(setq blacken-only-if-project-is-blackened t)
-;(require 'blacken)
-;(add-hook 'python-mode-hook 'blacken-mode)
+;; Only enable ruff-format-on-save in python-mode when a parent pyproject.toml
+;; has a [tool.ruff] section. Memoize per project dir so we don't keep reading
+;; the file, and only load ruff-format.el when it's actually needed.
+(defvar my-ruff-project-cache (make-hash-table :test 'equal)
+  "Cache of project directory -> whether its pyproject.toml uses ruff.")
+
+(defun my-pyproject-uses-ruff-p ()
+  "Non-nil if a parent pyproject.toml has a [tool.ruff(.*)?] section."
+  (when-let ((parent (locate-dominating-file default-directory "pyproject.toml")))
+    (let ((cached (gethash parent my-ruff-project-cache 'unset)))
+      (if (not (eq cached 'unset))
+          cached
+        (puthash parent
+                 (with-temp-buffer
+                   (insert-file-contents (expand-file-name "pyproject.toml" parent))
+                   (and (re-search-forward "^\\[tool\\.ruff[].]" nil t) t))
+                 my-ruff-project-cache)))))
+
+(defun my-maybe-enable-ruff-format ()
+  "Enable ruff-format-on-save-mode if this project uses ruff."
+  (when (my-pyproject-uses-ruff-p)
+    (require 'ruff-format)
+    (ruff-format-on-save-mode 1)))
+
+(add-hook 'python-mode-hook 'my-maybe-enable-ruff-format)
 
 ;; Use this when not using color-theme.el
 ;; ---------------------------------------------------------------------------
@@ -254,13 +276,21 @@
 ; Prefer Fortran 90 mode over Fortran mode
 (add-to-list 'auto-mode-alist '("\\.f\\'" . f90-mode))
 
+(defun my-markdown-mode-hook ()
+  ; override markdown binding.
+  (visual-line-mode 1)
+  (whitespace-mode -1)
+  (local-set-key [?\M-p] 'fill-paragraph)
+)
+
 ; Markdown mode
 (autoload 'markdown-mode "markdown-mode")
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(defun my-markdown-mode-hook ()
-  ; override markdown binding.
-  (local-set-key [?\M-p] 'fill-paragraph))
 (add-hook 'markdown-mode-hook 'my-markdown-mode-hook)
+
+; text mode
+;(use-package text-mode
+ ; :hook (text-mode . 'my-text-mode-hook))
 
 ;; rust mode
 (autoload 'rust-mode "rust-mode")
@@ -367,7 +397,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(python-black json-mode blacken pasp-mode go-mode ##)))
+ '(package-selected-packages '(diff-hl git-gutter markdown-mode python-black)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

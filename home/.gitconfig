@@ -17,12 +17,9 @@
     fsmonitor = false
     untrackedcache = true
 
-[pager]
     # Preserve color and don't wrap lines in my fancy git logs (see below)
-    lg = less -FXRS
-    lga = less -FXRS
-    status = less -FXRS
-#    diff = $(dirname $(which git))/../share/git-core/contrib/diff-highlight/diff-highlight | less
+    pager = less -FXRS
+	commentChar = >
 
 [alias]
     #
@@ -30,7 +27,28 @@
     #
     st = status
     ci = commit
-    co = checkout
+    # checkout, with support for github's "user:branch" PR ref format.
+    # `git co user:branch` will add the remote (via ghadd) or fetch it
+    # if it already exists, then check out the branch tracking that remote.
+    # If the local branch already exists, just check it out.
+    co = "!f() { \
+        if [ $# -eq 1 ] && [ \"${1#*:}\" != \"$1\" ]; then \
+            remote=${1%%:*}; \
+            branch=${1#*:}; \
+            if git show-ref --verify --quiet \"refs/heads/$branch\"; then \
+                git checkout \"$branch\"; \
+            else \
+                if git remote get-url \"$remote\" > /dev/null 2>&1; then \
+                    git fetch \"$remote\"; \
+                else \
+                    git ghadd \"$remote\"; \
+                fi && \
+                git checkout -b \"$branch\" \"$remote/$branch\"; \
+            fi; \
+        else \
+            git checkout \"$@\"; \
+        fi; \
+    }; f"
     tp = !"f() { \
         cd -- ${GIT_PREFIX:-.} && \
         mkdir -p $(dirname $1) && \
@@ -41,6 +59,11 @@
 
     # pull develop
     pd = fetch github develop:develop
+
+    # reset local branch to remote tracked branch state state
+    rt = !"f() { \
+        git reset --hard $(git rev-parse --abbrev-ref --symbolic-full-name \"@{u}\"); \
+    }; f"
 
     # show all branches
     br = branch --sort=-committerdate \
@@ -265,7 +288,8 @@
         python -c \"import webbrowser; webbrowser.open('${url}')\"; \
     }; f"
 
-    rebase-gitlab = "!f() { git rebase \"$@\" $(curl -Lfs 'https://gitlab.spack.io/api/v4/projects/2/pipelines?scope=finished&ref=develop&per_page=1' | jq -r 'first.sha'); }; f"
+    tag-gitlab = "!f() { git tag -f latest-gitlab-build $(curl -Lfs 'https://gitlab.spack.io/api/v4/projects/57/pipelines?scope=finished&ref=develop&per_page=1' | jq -r 'first.sha'); }; f"
+    rebase-gitlab = "!f() { git tag-gitlab && git rebase \"$@\" --onto latest-gitlab-build  $(git merge-base develop HEAD) $(git rev-parse --abbrev-ref HEAD); }; f"
 
     # rebase in place
     rip = "!f() {\
@@ -277,7 +301,13 @@
             echo \"couldn't find a merge base\";\
 	    return 1;\
 	fi;\
-	git rebase -i $base;\
+	git rebase \"$@\" -i $base;\
+    }; f"
+
+    # diff --stat, sorted by number of lines in changes
+    dsl = "!f() {\
+	git diff \"$@\" --stat --stat-width \"$(tput cols)\" --color=always \
+	| sort -t '|' -n -k2; \
     }; f"
 
 [push]
@@ -317,3 +347,13 @@
 	tool = opendiff
 [commit]
 	gpgsign = true
+
+[color "blame"]
+    highlightRecent = 237, 20 months ago, 238, 19 months ago, 239, 18 months ago, 240, 17 months ago, 241, 16 months ago, 242, 15 months ago, 243, 14 months ago, 244, 13 months ago, 245, 12 months ago, 246, 11 months ago, 247, 10 months ago, 248, 9 months ago, 249, 8 months ago, 250, 7 months ago, 251, 6 months ago, 252, 5 months ago, 253, 4 months ago, 254, 3 months ago, 231, 2 months ago, 230, 1 month ago, 229, 3 weeks ago, 228, 2 weeks ago, 227, 1 week ago, 226
+
+[blame]
+    coloring = highlightRecent
+    date = human
+
+[column]
+    ui = auto

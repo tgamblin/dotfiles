@@ -7,6 +7,7 @@ source_if_exists $HOME/src/spack/share/spack/setup-env.sh
 #autoload -Uz +X bashcompinit && bashcompinit
 source_if_exists $HOME/src/spack/share/spack/spack-completion.bash
 default_env=~/src/spack/var/spack/environments/default/.spack-env/view
+#default_env=~/src/spack/var/spack/environments/sequoia/.spack-env/view
 
 # brew
 eval "$(/opt/homebrew/bin/brew shellenv)"
